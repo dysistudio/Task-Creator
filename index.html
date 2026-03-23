@@ -629,13 +629,8 @@
     text-decoration: line-through;
   }
 
-  .scheduled-badge {
-    font-size: 0.62rem;
-    letter-spacing: 0.08em;
-    color: var(--accent-light);
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
+  .scheduled-badge { font-size: 0.62rem; letter-spacing: 0.08em; color: var(--accent-light); text-transform: uppercase; white-space: nowrap; }
+  .scheduled-badge.overdue { color: var(--red); }
 
   .project-actions {
     display: flex; gap: 0.4rem; opacity: 0; transition: opacity 0.15s;
@@ -1079,7 +1074,36 @@
 <div class="modal-overlay" id="project-task-modal">
   <div class="modal">
     <div class="modal-title" id="proj-modal-title">Add Task to Project</div>
-    <input type="text" class="add-input" id="proj-task-input" placeholder="Task description..." maxlength="120" style="margin-bottom:1.2rem;">
+    <div class="modal-sub">Add it to the backlog, or schedule it for a specific day.</div>
+
+    <label class="field-label">Task</label>
+    <input type="text" class="add-input" id="proj-task-input" placeholder="What needs to be done..." maxlength="120" style="margin-bottom:1.5rem;">
+
+    <label class="field-label">Schedule for (optional)</label>
+    <div style="display:flex; gap:0.8rem; margin-bottom:1.5rem; flex-wrap:wrap;">
+      <input type="date" class="schedule-select" id="proj-task-date" style="flex:1; min-width:130px;">
+      <select class="schedule-select" id="proj-task-time" style="flex:1; min-width:110px;">
+        <option value="">No time</option>
+        <option value="06:00">6:00 AM</option>
+        <option value="07:00">7:00 AM</option>
+        <option value="08:00">8:00 AM</option>
+        <option value="09:00">9:00 AM</option>
+        <option value="10:00">10:00 AM</option>
+        <option value="11:00">11:00 AM</option>
+        <option value="12:00">12:00 PM</option>
+        <option value="13:00">1:00 PM</option>
+        <option value="14:00">2:00 PM</option>
+        <option value="15:00">3:00 PM</option>
+        <option value="16:00">4:00 PM</option>
+        <option value="17:00">5:00 PM</option>
+        <option value="18:00">6:00 PM</option>
+        <option value="19:00">7:00 PM</option>
+        <option value="20:00">8:00 PM</option>
+      </select>
+    </div>
+
+    <div id="proj-task-hint" style="font-size:0.72rem;color:var(--ink-faint);margin-bottom:1rem;min-height:1.2em;"></div>
+
     <div class="modal-footer">
       <button class="btn-ghost" onclick="closeModal('project-task-modal')">Cancel</button>
       <button class="btn-primary" style="padding:0.5rem 1.2rem; width:auto;" onclick="confirmProjectTask()">Add Task</button>
@@ -1445,35 +1469,74 @@ function renderProjects() {
     const done = tasks.filter(t => t.done).length;
     const pct = tasks.length === 0 ? 0 : Math.round((done / tasks.length) * 100);
 
+    // Split into scheduled and backlog
+    const scheduled = tasks.filter(t => t.scheduledDate);
+    const backlog = tasks.filter(t => !t.scheduledDate);
+
+    // Sort scheduled by date
+    scheduled.sort((a,b) => a.scheduledDate > b.scheduledDate ? 1 : -1);
+
     const card = document.createElement('div');
     card.className = 'project-card';
+
+    let tasksHtml = '';
+
+    if (scheduled.length > 0) {
+      tasksHtml += `<div style="font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-faint);padding:0.6rem 0 0.3rem;">Scheduled</div>`;
+      tasksHtml += scheduled.map(t => {
+        const isToday = t.scheduledDate === today();
+        const isPast = t.scheduledDate < today() && !t.done;
+        const dateLabel = isToday ? 'today' : formatDateLabel(t.scheduledDate);
+        return `
+          <div class="project-task-item">
+            <div class="task-check ${t.done ? 'done' : ''}" onclick="toggleProjectTask('${proj.id}','${t.id}')"></div>
+            <div class="project-task-text ${t.done ? 'done' : ''}">
+              ${escHtml(t.title)}
+              ${t.scheduledTime ? `<span style="color:var(--ink-faint);font-size:0.75rem;margin-left:0.4rem;">${formatTime(t.scheduledTime)}</span>` : ''}
+            </div>
+            <div class="scheduled-badge ${isPast ? 'overdue' : ''}">${dateLabel}</div>
+            <div class="project-actions">
+              <button class="master-btn" onclick="editProjectTaskSchedule('${proj.id}','${t.id}')">edit</button>
+              <button class="master-btn danger" onclick="deleteProjectTask('${proj.id}','${t.id}')">✕</button>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    if (backlog.length > 0) {
+      tasksHtml += `<div style="font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-faint);padding:0.6rem 0 0.3rem;${scheduled.length>0?'margin-top:0.5rem;':''}">Backlog</div>`;
+      tasksHtml += backlog.map(t => `
+        <div class="project-task-item">
+          <div class="task-check ${t.done ? 'done' : ''}" onclick="toggleProjectTask('${proj.id}','${t.id}')"></div>
+          <div class="project-task-text ${t.done ? 'done' : ''}">${escHtml(t.title)}</div>
+          <div class="project-actions">
+            <button class="master-btn" onclick="editProjectTaskSchedule('${proj.id}','${t.id}')">schedule</button>
+            <button class="master-btn danger" onclick="deleteProjectTask('${proj.id}','${t.id}')">✕</button>
+          </div>
+        </div>`).join('');
+    }
+
+    if (tasks.length === 0) {
+      tasksHtml = `<div style="color:var(--ink-faint);font-size:0.8rem;padding:0.8rem 0;">No tasks yet. Add some below.</div>`;
+    }
+
     card.innerHTML = `
       <div class="project-header" onclick="toggleProject('${proj.id}')">
         <div>
           <div class="project-name">${escHtml(proj.name)}</div>
           ${proj.desc ? `<div style="font-size:0.72rem;color:var(--ink-faint);margin-top:0.15rem;">${escHtml(proj.desc)}</div>` : ''}
         </div>
-        <div>
+        <div style="text-align:right;">
           <div class="project-progress-text">${done}/${tasks.length} done</div>
+          <div style="font-size:0.65rem;color:var(--ink-faint);margin-top:0.1rem;">${scheduled.length} scheduled · ${backlog.length} backlog</div>
         </div>
       </div>
       <div class="project-bar">
         <div class="project-bar-fill" style="width:${pct}%"></div>
       </div>
       <div class="project-tasks" id="proj-tasks-${proj.id}">
-        ${tasks.length === 0 ? `<div style="color:var(--ink-faint);font-size:0.8rem;padding:0.8rem 0;">No tasks yet.</div>` : ''}
-        ${tasks.map(t => `
-          <div class="project-task-item">
-            <div class="task-check ${t.done ? 'done' : ''}" onclick="toggleProjectTask('${proj.id}','${t.id}')"></div>
-            <div class="project-task-text ${t.done ? 'done' : ''}">${escHtml(t.title)}</div>
-            ${t.scheduledDate ? `<div class="scheduled-badge">today</div>` : ''}
-            <div class="project-actions">
-              ${!t.scheduledDate && todayTasks().length < 7 ? `<button class="master-btn" onclick="scheduleProjectTask('${proj.id}','${t.id}')">Schedule</button>` : ''}
-              <button class="master-btn danger" onclick="deleteProjectTask('${proj.id}','${t.id}')">✕</button>
-            </div>
-          </div>
-        `).join('')}
-        <div style="padding-top:0.8rem;">
+        ${tasksHtml}
+        <div style="padding-top:0.8rem; border-top:1px solid var(--paper-mid); margin-top:0.5rem;">
           <button class="master-btn" onclick="openProjectTaskModal('${proj.id}')">+ Add task</button>
           <button class="master-btn danger" onclick="deleteProject('${proj.id}')" style="margin-left:0.5rem;">Delete project</button>
         </div>
@@ -1573,19 +1636,18 @@ function confirmSchedule() {
   saveState(); render(); closeSchedule(); toast('Task scheduled for today.');
 }
 
-function scheduleProjectTask(projId, taskId) {
-  const proj = state.projects.find(p => p.id === projId);
-  if (!proj) return;
-  const task = proj.tasks.find(t => t.id === taskId);
-  if (!task) return;
-  // Quick schedule to 9am
-  state.dailyTasks.push({ id: uid(), title: task.title, time: '09:00', projectId: projId, done: false, date: today() });
-  task.scheduledDate = today();
-  saveState(); render(); toast('Scheduled for today.');
-}
+// (scheduling handled via editProjectTaskSchedule modal)
 
 // Projects
 let currentProjectId = null;
+let currentEditTaskId = null;
+
+function formatDateLabel(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr + 'T00:00:00');
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${months[d.getMonth()]} ${d.getDate()}`;
+}
 
 function showNewProjectForm() {
   document.getElementById('new-project-form').classList.remove('hidden');
@@ -1633,11 +1695,40 @@ function deleteProjectTask(projId, taskId) {
 
 function openProjectTaskModal(projId) {
   currentProjectId = projId;
+  currentEditTaskId = null;
   const proj = state.projects.find(p => p.id === projId);
   document.getElementById('proj-modal-title').textContent = proj ? `Add Task → ${proj.name}` : 'Add Task';
   document.getElementById('proj-task-input').value = '';
+  document.getElementById('proj-task-date').value = '';
+  document.getElementById('proj-task-time').value = '';
+  document.getElementById('proj-task-hint').textContent = '';
   document.getElementById('project-task-modal').classList.add('open');
   setTimeout(() => document.getElementById('proj-task-input').focus(), 100);
+}
+
+function editProjectTaskSchedule(projId, taskId) {
+  currentProjectId = projId;
+  currentEditTaskId = taskId;
+  const proj = state.projects.find(p => p.id === projId);
+  const task = proj ? proj.tasks.find(t => t.id === taskId) : null;
+  if (!task) return;
+  document.getElementById('proj-modal-title').textContent = `Edit Schedule`;
+  document.getElementById('proj-task-input').value = task.title;
+  document.getElementById('proj-task-date').value = task.scheduledDate || '';
+  document.getElementById('proj-task-time').value = task.scheduledTime || '';
+  updateProjTaskHint();
+  document.getElementById('project-task-modal').classList.add('open');
+}
+
+function updateProjTaskHint() {
+  const date = document.getElementById('proj-task-date').value;
+  const hint = document.getElementById('proj-task-hint');
+  if (!date) { hint.textContent = 'No date set — task goes to backlog.'; return; }
+  if (date === today()) { hint.textContent = '→ Will appear on today\'s Dashboard (if under 7 tasks).'; return; }
+  if (date < today()) { hint.textContent = '↳ Past date — task will sit in backlog.'; return; }
+  const d = new Date(date + 'T00:00:00');
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  hint.textContent = `→ Scheduled for ${days[d.getDay()]}, ${date}.`;
 }
 
 function confirmProjectTask() {
@@ -1645,8 +1736,47 @@ function confirmProjectTask() {
   if (!title || !currentProjectId) return;
   const proj = state.projects.find(p => p.id === currentProjectId);
   if (!proj) return;
-  proj.tasks.push({ id: uid(), title, done: false, scheduledDate: null });
-  saveState(); renderProjects(); closeModal('project-task-modal');
+
+  const scheduledDate = document.getElementById('proj-task-date').value || null;
+  const scheduledTime = document.getElementById('proj-task-time').value || null;
+
+  if (currentEditTaskId) {
+    // Editing existing task
+    const task = proj.tasks.find(t => t.id === currentEditTaskId);
+    if (task) {
+      task.title = title;
+      task.scheduledDate = scheduledDate;
+      task.scheduledTime = scheduledTime;
+    }
+  } else {
+    proj.tasks.push({ id: uid(), title, done: false, scheduledDate, scheduledTime });
+  }
+
+  // If scheduled for today and dashboard has room, auto-add to daily tasks
+  if (scheduledDate === today()) {
+    const alreadyAdded = state.dailyTasks.some(t =>
+      t.projectId === currentProjectId &&
+      t.title === title &&
+      t.date === today()
+    );
+    if (!alreadyAdded && todayTasks().length < 7) {
+      state.dailyTasks.push({
+        id: uid(),
+        title,
+        time: scheduledTime || '09:00',
+        projectId: currentProjectId,
+        done: false,
+        date: today()
+      });
+      toast('Task added to today\'s Dashboard.');
+    } else if (todayTasks().length >= 7) {
+      toast('Saved. Dashboard full — remove a task to show it today.');
+    } else {
+      toast('Schedule updated.');
+    }
+  }
+
+  saveState(); render(); closeModal('project-task-modal');
 }
 
 // Reflection
@@ -1754,6 +1884,8 @@ document.getElementById('master-input').addEventListener('keydown', e => { if (e
 document.getElementById('login-pass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
 document.getElementById('reg-pass2').addEventListener('keydown', e => { if (e.key === 'Enter') doRegister(); });
 document.getElementById('proj-task-input').addEventListener('keydown', e => { if (e.key === 'Enter') confirmProjectTask(); });
+document.getElementById('proj-task-date').addEventListener('change', updateProjTaskHint);
+document.getElementById('proj-task-time').addEventListener('change', updateProjTaskHint);
 
 // Close modals on overlay click
 ['reflection-modal','schedule-modal','cal-modal','project-task-modal'].forEach(id => {
@@ -1762,12 +1894,33 @@ document.getElementById('proj-task-input').addEventListener('keydown', e => { if
   });
 });
 
+function syncProjectTasksToday() {
+  // Auto-add project tasks scheduled for today to daily tasks (if not already there and slots remain)
+  state.projects.forEach(proj => {
+    (proj.tasks || []).forEach(task => {
+      if (task.scheduledDate !== today() || task.done) return;
+      const alreadyAdded = state.dailyTasks.some(d =>
+        d.date === today() && d.title === task.title && d.projectId === proj.id
+      );
+      if (!alreadyAdded && todayTasks().length < 7) {
+        state.dailyTasks.push({
+          id: uid(), title: task.title,
+          time: task.scheduledTime || '09:00',
+          projectId: proj.id, done: false, date: today()
+        });
+      }
+    });
+  });
+  saveState();
+}
+
 // ============================================================
 // BOOT
 // ============================================================
 function startApp() {
   loadState();
   checkRollover();
+  syncProjectTasksToday();
 
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app').style.display = 'flex';
