@@ -1426,6 +1426,8 @@ async function confirmProjectTask() {
     }
   }
 
+  // Re-sync so any task just scheduled for today immediately appears on the dashboard
+  await syncProjectTasksToday();
   render(); closeModal('project-task-modal');
 }
 
