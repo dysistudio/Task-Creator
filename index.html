@@ -6,34 +6,34 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Task Leader">
-<meta name="theme-color" content="#faf7f2">
+<meta name="theme-color" content="#faf9ff">
 <title>Task Leader</title>
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
   :root {
-    --paper: #faf7f2;
-    --paper-dark: #f0ead8;
-    --paper-mid: #e8dfc8;
-    --ink: #2c2318;
-    --ink-light: #6b5d4f;
-    --ink-faint: #b5a898;
-    --accent: #8b5e3c;
-    --accent-light: #c4956a;
-    --rule: #d4c9b8;
-    --shadow: rgba(44,35,24,0.08);
-    --red: #8b2e2e;
+    --paper: #faf9ff;
+    --paper-dark: #f0edf8;
+    --paper-mid: #e4dff2;
+    --ink: #1a1625;
+    --ink-light: #5c5470;
+    --ink-faint: #a09ab8;
+    --accent: #7c6fa0;
+    --accent-light: #a896cc;
+    --rule: #ddd8ee;
+    --shadow: rgba(26,22,37,0.07);
+    --red: #8b3a5a;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   html, body {
     height: 100%;
-    background: var(--paper-dark);
-    font-family: 'Courier Prime', 'Courier New', monospace;
+    background: var(--paper);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     color: var(--ink);
     overflow-x: hidden;
   }
@@ -42,7 +42,7 @@
     content: '';
     position: fixed;
     inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
     pointer-events: none;
     z-index: 9999;
   }
@@ -57,10 +57,11 @@
     gap: 1rem;
   }
   .loading-logo {
-    font-family: 'Courier Prime', monospace;
-    font-size: 0.85rem;
-    color: var(--ink);
-    letter-spacing: 0.3em;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--ink-faint);
+    letter-spacing: 0.35em;
     text-transform: uppercase;
   }
   .loading-dots {
@@ -91,10 +92,11 @@
   .login-card {
     background: var(--paper);
     width: 100%;
-    max-width: 380px;
-    padding: 3rem 2.5rem;
+    max-width: 360px;
+    padding: 2.5rem 2rem;
     position: relative;
-    box-shadow: 0 2px 40px var(--shadow), 0 0 0 1px var(--rule);
+    border-radius: 18px;
+    box-shadow: 0 8px 40px rgba(124,111,160,0.12), 0 0 0 1px var(--rule);
   }
 
   .login-card::before {
@@ -105,8 +107,8 @@
     background: var(--accent);
   }
 
-  .login-logo { font-family: 'Courier Prime', monospace; font-size: 1rem; color: var(--ink); margin-bottom: 0.3rem; letter-spacing: 0.3em; text-transform: uppercase; font-weight: 700; }
-  .login-sub { font-size: 0.75rem; color: var(--ink-faint); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 2.5rem; }
+  .login-logo { font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--ink); margin-bottom: 0.2rem; letter-spacing: 0.15em; text-transform: uppercase; }
+  .login-sub { font-size: 0.72rem; font-weight: 400; color: var(--ink-faint); letter-spacing: 0.08em; margin-bottom: 2rem; }
 
   .field-label { display: block; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-light); margin-bottom: 0.4rem; }
 
@@ -127,19 +129,22 @@
 
   .btn-primary {
     width: 100%;
-    padding: 0.8rem;
-    background: var(--ink);
-    color: var(--paper);
+    padding: 0.75rem;
+    background: var(--accent);
+    color: #fff;
     border: none;
-    font-family: 'Courier Prime', monospace;
-    font-size: 0.85rem;
-    letter-spacing: 0.15em;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     cursor: pointer;
-    transition: background 0.2s;
+    border-radius: 10px;
+    transition: background 0.2s, transform 0.1s;
   }
-  .btn-primary:hover { background: var(--accent); }
-  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-primary:hover { background: var(--ink); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
 
   .login-toggle { text-align: center; margin-top: 1.5rem; font-size: 0.78rem; color: var(--ink-light); }
   .login-toggle a { color: var(--accent); cursor: pointer; text-decoration: underline; }
@@ -150,9 +155,11 @@
   #app { display: none; min-height: 100vh; flex-direction: column; }
 
   .app-header {
-    background: var(--paper);
+    background: rgba(250,249,255,0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--rule);
-    padding: 1rem 1.5rem;
+    padding: 0.85rem 1.5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -161,31 +168,33 @@
     z-index: 100;
   }
 
-  .app-logo { font-family: 'Courier Prime', monospace; font-size: 0.8rem; color: var(--ink); letter-spacing: 0.3em; text-transform: uppercase; font-weight: 700; }
+  .app-logo { font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 600; color: var(--ink); letter-spacing: 0.12em; text-transform: uppercase; }
   .app-date { font-size: 0.72rem; color: var(--ink-faint); letter-spacing: 0.1em; text-transform: uppercase; }
   .header-right { display: flex; align-items: center; gap: 1rem; }
 
   .btn-icon { background: none; border: none; cursor: pointer; color: var(--ink-light); font-size: 1.1rem; padding: 0.2rem; transition: color 0.2s; }
   .btn-icon:hover { color: var(--accent); }
 
-  .tabs { display: flex; border-bottom: 1px solid var(--rule); background: var(--paper); padding: 0 1.5rem; }
+  .tabs { display: flex; border-bottom: 1px solid var(--rule); background: rgba(250,249,255,0.9); padding: 0 1.2rem; gap: 0.2rem; }
 
   .tab {
-    font-family: 'Courier Prime', monospace;
-    font-size: 0.72rem;
-    letter-spacing: 0.12em;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--ink-faint);
-    padding: 0.8rem 1rem 0.7rem;
+    padding: 0.75rem 0.9rem 0.65rem;
     border: none;
     background: none;
     cursor: pointer;
     border-bottom: 2px solid transparent;
     margin-bottom: -1px;
-    transition: all 0.2s;
+    transition: all 0.18s;
+    border-radius: 6px 6px 0 0;
   }
-  .tab.active { color: var(--ink); border-bottom-color: var(--accent); }
-  .tab:hover { color: var(--ink-light); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); background: rgba(124,111,160,0.06); }
+  .tab:hover { color: var(--ink-light); background: rgba(124,111,160,0.04); }
 
   .app-body { flex: 1; padding: 1.5rem; max-width: 700px; margin: 0 auto; width: 100%; }
 
@@ -194,8 +203,8 @@
 
   /* === DASHBOARD === */
   .day-header { margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--rule); }
-  .day-title { font-family: 'Courier Prime', monospace; font-size: 1rem; color: var(--ink); margin-bottom: 0.4rem; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 700; }
-  .day-progress { font-size: 0.68rem; color: var(--ink-faint); letter-spacing: 0.12em; text-transform: uppercase; }
+  .day-title { font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 600; color: var(--ink); margin-bottom: 0.3rem; letter-spacing: 0.1em; text-transform: uppercase; }
+  .day-progress { font-family: 'Inter', sans-serif; font-size: 0.68rem; font-weight: 400; color: var(--ink-faint); letter-spacing: 0.04em; }
   .progress-bar { height: 1px; background: var(--rule); margin-top: 0.9rem; position: relative; }
   .progress-fill { position: absolute; top: 0; left: 0; height: 100%; background: var(--accent); transition: width 0.4s ease; }
 
@@ -219,19 +228,21 @@
   .time-label { font-size: 0.7rem; color: var(--ink-faint); letter-spacing: 0.08em; min-width: 52px; padding-top: 2px; user-select: none; }
 
   .task-check {
-    width: 16px; height: 16px;
-    border: 1px solid var(--ink-light);
-    flex-shrink: 0; margin-top: 2px;
+    width: 18px; height: 18px;
+    border: 1.5px solid var(--rule);
+    border-radius: 50%;
+    flex-shrink: 0; margin-top: 1px;
     cursor: pointer;
     display: flex; align-items: center; justify-content: center;
-    transition: all 0.2s;
+    transition: all 0.18s;
     background: transparent;
   }
+  .task-check:hover { border-color: var(--accent); }
   .task-check.done { border-color: var(--accent); background: var(--accent); }
-  .task-check.done::after { content: '✓'; color: var(--paper); font-size: 10px; line-height: 1; }
+  .task-check.done::after { content: '✓'; color: #fff; font-size: 10px; line-height: 1; font-family: 'Inter', sans-serif; font-weight: 600; }
 
   .task-content { flex: 1; min-width: 0; }
-  .task-title { font-size: 0.95rem; color: var(--ink); line-height: 1.4; transition: color 0.2s; word-break: break-word; }
+  .task-title { font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 400; color: var(--ink); line-height: 1.45; transition: color 0.2s; word-break: break-word; }
   .task-title.done { color: var(--ink-faint); text-decoration: line-through; }
   .task-meta { display: flex; gap: 0.8rem; margin-top: 0.25rem; flex-wrap: wrap; }
   .task-tag { font-size: 0.68rem; letter-spacing: 0.1em; color: var(--ink-faint); text-transform: uppercase; }
@@ -257,8 +268,8 @@
 
   .add-input {
     background: transparent; border: none; border-bottom: 1px solid var(--rule);
-    padding: 0.5rem 0; font-family: 'Courier Prime', monospace; font-size: 0.95rem;
-    color: var(--ink); outline: none; width: 100%; transition: border-color 0.2s;
+    padding: 0.5rem 0; font-family: 'Inter', sans-serif; font-size: 0.88rem;
+    color: var(--ink); outline: none; width: 100%; transition: border-color 0.18s;
   }
   .add-input:focus { border-bottom-color: var(--accent); }
   .add-input::placeholder { color: var(--ink-faint); }
@@ -267,24 +278,25 @@
 
   .add-select {
     background: transparent; border: none; border-bottom: 1px solid var(--rule);
-    padding: 0.4rem 0; font-family: 'Courier Prime', monospace; font-size: 0.82rem;
+    padding: 0.4rem 0; font-family: 'Inter', sans-serif; font-size: 0.8rem;
     color: var(--ink-light); outline: none; cursor: pointer; flex: 1; min-width: 120px;
   }
 
   .btn-add {
-    padding: 0.5rem 1.2rem; background: var(--ink); color: var(--paper);
-    border: none; font-family: 'Courier Prime', monospace; font-size: 0.75rem;
-    letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer;
-    transition: background 0.2s; white-space: nowrap;
+    padding: 0.5rem 1.1rem; background: var(--accent); color: #fff;
+    border: none; font-family: 'Inter', sans-serif; font-size: 0.72rem;
+    font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer;
+    border-radius: 8px; transition: background 0.18s, transform 0.1s; white-space: nowrap;
   }
-  .btn-add:hover { background: var(--accent); }
-  .btn-add:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-add:hover { background: var(--ink); }
+  .btn-add:active { transform: scale(0.97); }
+  .btn-add:disabled { opacity: 0.4; cursor: not-allowed; }
 
   .task-limit-note { font-size: 0.72rem; color: var(--ink-faint); letter-spacing: 0.05em; margin-top: 0.5rem; }
 
   /* === MASTER LIST === */
   .section-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 1.5rem; }
-  .section-title { font-family: 'Courier Prime', monospace; font-size: 0.85rem; color: var(--ink); letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700; }
+  .section-title { font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 600; color: var(--ink); letter-spacing: 0.1em; text-transform: uppercase; }
   .section-count { font-size: 0.72rem; color: var(--ink-faint); letter-spacing: 0.08em; }
 
   .master-item { display: flex; align-items: flex-start; gap: 0.8rem; padding: 0.8rem 0; border-bottom: 1px solid var(--paper-mid); }
@@ -297,17 +309,17 @@
 
   .master-btn {
     background: none; border: 1px solid var(--rule); cursor: pointer;
-    font-family: 'Courier Prime', monospace; font-size: 0.65rem;
-    letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-light);
-    padding: 0.2rem 0.5rem; transition: all 0.2s; white-space: nowrap;
+    font-family: 'Inter', sans-serif; font-size: 0.62rem; font-weight: 500;
+    letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-light);
+    padding: 0.2rem 0.55rem; border-radius: 5px; transition: all 0.18s; white-space: nowrap;
   }
-  .master-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .master-btn.danger:hover { border-color: var(--red); color: var(--red); }
+  .master-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(124,111,160,0.06); }
+  .master-btn.danger:hover { border-color: var(--red); color: var(--red); background: rgba(139,58,90,0.05); }
 
   /* === PROJECTS === */
   /* project-card now defined below with drag support */
   .project-header { padding: 1rem 1.2rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--rule); cursor: pointer; user-select: none; }
-  .project-name { font-family: 'Courier Prime', monospace; font-size: 0.82rem; color: var(--ink); letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700; }
+  .project-name { font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 600; color: var(--ink); letter-spacing: 0.04em; }
   .project-progress-text { font-size: 0.7rem; color: var(--ink-faint); letter-spacing: 0.08em; }
   .project-bar { height: 2px; background: var(--rule); position: relative; margin: 0 1.2rem; }
   .project-bar-fill { position: absolute; top: 0; left: 0; height: 100%; background: var(--accent); transition: width 0.4s; }
@@ -335,12 +347,13 @@
 
   .modal {
     background: var(--paper); width: 100%; max-width: 480px;
-    padding: 2.5rem; position: relative;
-    box-shadow: 0 8px 60px rgba(44,35,24,0.2); max-height: 80vh; overflow-y: auto;
+    padding: 2rem; position: relative;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(124,111,160,0.18), 0 0 0 1px var(--rule); max-height: 85vh; overflow-y: auto;
   }
-  .modal::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent); }
+  .modal::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent); border-radius: 16px 16px 0 0; }
 
-  .modal-title { font-family: 'Courier Prime', monospace; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.3rem; color: var(--ink); }
+  .modal-title { font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.3rem; color: var(--ink); }
   .modal-sub { font-size: 0.75rem; color: var(--ink-faint); margin-bottom: 1.5rem; letter-spacing: 0.05em; line-height: 1.5; }
 
   .reflection-item { margin-bottom: 1.2rem; }
@@ -357,10 +370,11 @@
 
   .btn-ghost {
     padding: 0.5rem 1rem; background: none; border: 1px solid var(--rule);
-    font-family: 'Courier Prime', monospace; font-size: 0.75rem;
-    letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-light); cursor: pointer; transition: all 0.2s;
+    font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-light); cursor: pointer;
+    border-radius: 8px; transition: all 0.18s;
   }
-  .btn-ghost:hover { border-color: var(--ink-light); }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
 
   /* === WIN CALENDAR === */
   .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 1rem; }
@@ -370,12 +384,12 @@
   .cal-day.header { border: none; font-size: 0.6rem; letter-spacing: 0.08em; color: var(--ink-faint); }
 
   .streak-display { display: flex; align-items: baseline; gap: 0.5rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); }
-  .streak-num { font-family: 'Courier Prime', monospace; font-size: 2rem; color: var(--accent); line-height: 1; font-weight: 700; letter-spacing: -0.02em; }
+  .streak-num { font-family: 'Inter', sans-serif; font-size: 2.2rem; color: var(--accent); line-height: 1; font-weight: 700; letter-spacing: -0.03em; }
   .streak-label { font-size: 0.75rem; color: var(--ink-light); letter-spacing: 0.1em; text-transform: uppercase; }
 
   .schedule-select {
     width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--rule);
-    padding: 0.5rem 0; font-family: 'Courier Prime', monospace; font-size: 0.95rem;
+    padding: 0.5rem 0; font-family: 'Inter', sans-serif; font-size: 0.88rem;
     color: var(--ink); outline: none; margin-bottom: 1.2rem; cursor: pointer;
   }
 
@@ -462,10 +476,11 @@
 
   /* === DRAGGABLE PROJECT CARDS === */
   .project-card {
-    border: 1px solid var(--rule); margin-bottom: 1.5rem; background: var(--paper);
-    cursor: grab; user-select: none;
-    transition: box-shadow 0.15s, opacity 0.15s;
+    border: 1px solid var(--rule); margin-bottom: 1.2rem; background: var(--paper);
+    cursor: grab; user-select: none; border-radius: 12px; overflow: hidden;
+    transition: box-shadow 0.18s, opacity 0.15s;
   }
+  .project-card:hover { box-shadow: 0 4px 20px rgba(124,111,160,0.1); }
   .project-card:active { cursor: grabbing; }
   .project-card.proj-dragging { opacity: 0.4; box-shadow: none; }
   .project-card.proj-drag-over { border-top: 2px solid var(--accent); }
@@ -496,7 +511,58 @@
   .overflow-expand-btn:hover { border-color: var(--accent); color: var(--accent); }
 
   /* === TIME CONFLICT BADGE === */
-  .time-conflict { background: #fff3cd; border-left: 3px solid var(--accent-light); }
+  .time-conflict { background: rgba(168,150,204,0.08); border-left: 3px solid var(--accent-light); }
+
+  /* === DONE SECTION === */
+  .done-section { margin-top: 1.5rem; border-top: 1px solid var(--rule); padding-top: 1rem; }
+  .done-section-toggle {
+    display: flex; align-items: center; gap: 0.5rem; cursor: pointer;
+    font-family: 'Inter', sans-serif; font-size: 0.68rem; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint);
+    background: none; border: none; padding: 0; margin-bottom: 0.8rem;
+  }
+  .done-section-toggle:hover { color: var(--ink-light); }
+  .done-task-row {
+    display: flex; align-items: center; gap: 0.8rem; padding: 0.5rem 0;
+    border-bottom: 1px solid var(--paper-mid); opacity: 0.65;
+  }
+  .done-task-title { font-family: 'Inter', sans-serif; font-size: 0.83rem; color: var(--ink-faint); text-decoration: line-through; flex: 1; }
+  .done-task-time { font-size: 0.65rem; color: var(--ink-faint); }
+
+  /* === RECURRING BADGE === */
+  .recurring-badge {
+    font-size: 0.6rem; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--accent-light); background: rgba(124,111,160,0.1);
+    padding: 0.1rem 0.4rem; border-radius: 4px; white-space: nowrap;
+  }
+
+  /* === FIELD LABEL Inter === */
+  .field-label { display: block; font-family: 'Inter', sans-serif; font-size: 0.67rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-light); margin-bottom: 0.4rem; }
+
+  /* === FIELD INPUT Inter === */
+  .field-input {
+    width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--rule);
+    padding: 0.5rem 0; font-family: 'Inter', sans-serif; font-size: 0.95rem;
+    color: var(--ink); outline: none; transition: border-color 0.18s; margin-bottom: 1.5rem;
+  }
+  .field-input:focus { border-bottom-color: var(--accent); }
+
+  /* journal Inter */
+  .journal-textarea { font-family: 'Inter', sans-serif; }
+  .journal-section-label { font-family: 'Inter', sans-serif; }
+
+  /* toast Inter */
+  #toast { font-family: 'Inter', sans-serif; border-radius: 10px; }
+
+  /* time-label Inter */
+  .time-label { font-family: 'Inter', sans-serif; font-size: 0.67rem; color: var(--ink-faint); letter-spacing: 0.04em; min-width: 52px; padding-top: 2px; user-select: none; }
+
+  /* master-item-title Inter */
+  .master-item-title { font-family: 'Inter', sans-serif; font-size: 0.88rem; }
+  .master-item-meta { font-family: 'Inter', sans-serif; }
+  .add-title { font-family: 'Inter', sans-serif; }
+  .task-tag { font-family: 'Inter', sans-serif; }
+
 </style>
 </head>
 <body>
@@ -792,6 +858,21 @@
       </select>
     </div>
     <div id="proj-task-hint" style="font-size:0.72rem;color:var(--ink-faint);margin-bottom:1rem;min-height:1.2em;"></div>
+    <label class="field-label" style="margin-top:0.5rem;">Repeat (optional)</label>
+    <select class="schedule-select" id="proj-task-recur" style="margin-bottom:1rem;">
+      <option value="">No repeat</option>
+      <option value="daily">Every day</option>
+      <option value="weekdays">Weekdays (Mon–Fri)</option>
+      <option value="weekends">Weekends (Sat–Sun)</option>
+      <option value="weekly">Weekly (same day)</option>
+      <option value="mon">Every Monday</option>
+      <option value="tue">Every Tuesday</option>
+      <option value="wed">Every Wednesday</option>
+      <option value="thu">Every Thursday</option>
+      <option value="fri">Every Friday</option>
+      <option value="sat">Every Saturday</option>
+      <option value="sun">Every Sunday</option>
+    </select>
     <div class="modal-footer">
       <button class="btn-ghost" onclick="closeModal('project-task-modal')">Cancel</button>
       <button class="btn-primary" style="padding:0.5rem 1.2rem; width:auto;" onclick="confirmProjectTask()">Add Task</button>
@@ -1187,6 +1268,56 @@ async function dbAddReflection(r) {
 }
 
 // ============================================================
+// RECURRING TASKS (stored in localStorage, no extra DB table needed)
+// ============================================================
+function getRecurringTasks() {
+  try { return JSON.parse(localStorage.getItem(`tl_recurring_${currentUser.id}`) || '[]'); } catch(e) { return []; }
+}
+function saveRecurringTasks(tasks) {
+  localStorage.setItem(`tl_recurring_${currentUser.id}`, JSON.stringify(tasks));
+}
+async function dbSaveRecurring({ title, time, projectId, pattern }) {
+  const tasks = getRecurringTasks();
+  const id = uid();
+  tasks.push({ id, title, time, projectId, pattern, createdAt: today() });
+  saveRecurringTasks(tasks);
+}
+
+// Check if a recurring task should fire today
+function recurMatchesToday(pattern) {
+  const d = new Date();
+  const dow = d.getDay(); // 0=Sun,1=Mon,...,6=Sat
+  const dayMap = { mon:1, tue:2, wed:3, thu:4, fri:5, sat:6, sun:0 };
+  if (pattern === 'daily') return true;
+  if (pattern === 'weekdays') return dow >= 1 && dow <= 5;
+  if (pattern === 'weekends') return dow === 0 || dow === 6;
+  if (pattern === 'weekly') return true; // simplification: fires every week; track via last-fired
+  if (dayMap[pattern] !== undefined) return dow === dayMap[pattern];
+  return false;
+}
+
+async function syncRecurringTasksToday() {
+  const recurTasks = getRecurringTasks();
+  const lastFiredKey = `tl_recur_fired_${currentUser.id}_${today()}`;
+  const alreadyFired = new Set(JSON.parse(localStorage.getItem(lastFiredKey) || '[]'));
+
+  for (const r of recurTasks) {
+    if (alreadyFired.has(r.id)) continue;
+    if (!recurMatchesToday(r.pattern)) continue;
+    // Check not already in daily_tasks today
+    const exists = state.dailyTasks.some(t => t.date === today() && t.title === r.title && t.projectId === r.projectId);
+    if (!exists) {
+      const newId = await dbAddDailyTask({ title: r.title, time: r.time, projectId: r.projectId, date: today() });
+      if (newId) {
+        state.dailyTasks.push({ id: newId, title: r.title, time: r.time, projectId: r.projectId, done: false, date: today() });
+      }
+    }
+    alreadyFired.add(r.id);
+  }
+  localStorage.setItem(lastFiredKey, JSON.stringify([...alreadyFired]));
+}
+
+// ============================================================
 // END-OF-DAY ROLLOVER
 // ============================================================
 async function checkRollover() {
@@ -1217,6 +1348,12 @@ async function checkRollover() {
 
       setTimeout(() => showReflection(unfinished), 800);
     }
+    // Delete done tasks from yesterday (don't keep them)
+    const yesterdayDone = state.dailyTasks.filter(t => t.date === lastChecked && t.done);
+    for (const t of yesterdayDone) {
+      await dbDeleteDailyTask(t.id);
+    }
+    state.dailyTasks = state.dailyTasks.filter(t => !(t.date === lastChecked && t.done));
   }
 
   state.lastChecked = td;
@@ -1240,9 +1377,10 @@ function getPendingTodayTasks() {
 }
 
 async function syncProjectTasksToday() {
+  // Push ALL today-scheduled project tasks to daily_tasks (no cap).
+  // The dashboard display layer controls what's visible (7 active max).
   const pending = getPendingTodayTasks();
   for (const { task, proj } of pending) {
-    if (todayTasks().length >= 7) break;
     const newId = await dbAddDailyTask({
       title: task.title, time: task.scheduledTime || '09:00',
       projectId: proj.id, date: today()
@@ -1253,21 +1391,9 @@ async function syncProjectTasksToday() {
   }
 }
 
-// Called when a daily task is completed/deleted — pull in next queued task if slot opens
-async function fillFromQueue() {
-  const pending = getPendingTodayTasks();
-  if (pending.length === 0) return;
-  if (todayTasks().length >= 7) return;
-  const { task, proj } = pending[0];
-  const newId = await dbAddDailyTask({
-    title: task.title, time: task.scheduledTime || '09:00',
-    projectId: proj.id, date: today()
-  });
-  if (newId) {
-    state.dailyTasks.push({ id: newId, title: task.title, time: task.scheduledTime || '09:00', projectId: proj.id, done: false, date: today() });
-    toast(`"${task.title}" moved to today.`);
-  }
-}
+// fillFromQueue is now a no-op — all tasks are synced at boot.
+// Kept for compatibility; visual queue is managed in renderDashboard.
+async function fillFromQueue() { /* tasks already in daily_tasks via syncProjectTasksToday */ }
 
 // ============================================================
 // RENDER
@@ -1308,8 +1434,6 @@ function renderDashboard() {
     toast('All tasks complete. Today is a Win Day. ✓');
   }
 
-  const MAX = 7;
-
   if (td.length === 0) {
     const nowH = new Date().getHours();
     const startH = nowH < 23 ? nowH + 1 : 0;
@@ -1322,11 +1446,13 @@ function renderDashboard() {
       container.appendChild(el);
     }
   } else {
-    // Determine which tasks to show (max 7 visible)
-    // If done >= 4, user may unlock to see up to 7; otherwise show max 7
-    // First, visible = first 7. Hidden = tasks 8+ (if any)
-    const visible = td.slice(0, MAX);
-    const hidden = td.slice(MAX); // beyond 7 stay hidden from view even if unlocked
+    const MAX = 7;
+    // Split: active (not done) vs done
+    const active = td.filter(t => !t.done);
+    const done_tasks = td.filter(t => t.done);
+    // Show up to 7 active tasks; rest are "queued" (already in DB, just not displayed)
+    const visible = active.slice(0, MAX);
+    const hidden = active.slice(MAX); // active tasks beyond the 7 shown
 
     // Detect time conflicts
     const timeCounts = {};
@@ -1393,14 +1519,14 @@ function renderDashboard() {
     // If done >= 4 and not unlocked: show "See more" button
     // If unlocked: show overflow section (still hidden beyond 7 is just listed but truncated to show +info)
     const queueCount = getPendingTodayTasks().length;
-    const hiddenQueue = hidden.length + queueCount; // tasks beyond 7
+    const hiddenQueue = hidden.length + queueCount; // active tasks beyond the 7 shown
 
-    if (done >= 4 && hiddenQueue > 0) {
+    if (done >= 3 && hiddenQueue > 0) {
       const overflowDiv = document.createElement('div');
       overflowDiv.className = 'overflow-reveal';
       if (!dashOverflowUnlocked) {
         overflowDiv.innerHTML = `
-          <div class="overflow-reveal-label">You've cleared 4 tasks. Good work.</div>
+          <div class="overflow-reveal-label">You've cleared 3 tasks. Keep going.</div>
           <div style="font-size:0.8rem;color:var(--ink-light);margin-bottom:0.6rem;">${hiddenQueue} more task${hiddenQueue!==1?'s':''} waiting — want to see them?</div>
           <button class="overflow-expand-btn" onclick="unlockOverflow()">Show remaining tasks →</button>`;
       } else {
@@ -1429,6 +1555,27 @@ function renderDashboard() {
     }
   }
 
+  // Done section — shown below active tasks, collapsible
+  if (td && td.filter && td.filter(t => t.done).length > 0) {
+    const doneTasks = td.filter(t => t.done);
+    const doneSection = document.createElement('div');
+    doneSection.className = 'done-section';
+    const doneVisible = doneTasks;
+    doneSection.innerHTML = `
+      <button class="done-section-toggle" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display==='none'?'':'none'; this.textContent = this.textContent.includes('▾') ? '▸ Completed today (${doneVisible.length})' : '▾ Completed today (${doneVisible.length})'">
+        ▾ Completed today (${doneVisible.length})
+      </button>
+      <div id="done-tasks-list">
+        ${doneVisible.map(t => `
+          <div class="done-task-row">
+            <div class="task-check done" onclick="toggleTask('${t.id}')"></div>
+            <div class="done-task-title">${escHtml(t.title)}</div>
+            <div class="done-task-time">${formatTime(t.time)}</div>
+          </div>`).join('')}
+      </div>`;
+    container.appendChild(doneSection);
+  }
+
   // 10-min block
   const tenMin = state.masterTasks.filter(t => t.isTenMin);
   const tenBlock = document.createElement('div');
@@ -1448,13 +1595,14 @@ function renderDashboard() {
   container.appendChild(tenBlock);
 
   const note = document.getElementById('task-limit-note');
-  const queueCount2 = getPendingTodayTasks().length;
-  if (td.length >= MAX) {
-    note.innerHTML = `Today's 7 tasks are set.${queueCount2 > 0 ? ` <span style="color:var(--accent);">+${queueCount2} queued — will appear as you finish.</span>` : ''}`;
+  const activeCount = td.filter(t => !t.done).length;
+  const queueCount2 = getPendingTodayTasks().length + active.slice(MAX).length;
+  if (activeCount >= MAX) {
+    note.innerHTML = `7 active tasks. Complete one to unlock the next.${queueCount2 > 0 ? ` <span style="color:var(--accent-light);font-size:0.68rem;">+${queueCount2} queued for today.</span>` : ''}`;
     document.getElementById('add-daily-section').style.opacity = '0.5';
     document.getElementById('add-daily-section').style.pointerEvents = 'none';
   } else {
-    note.textContent = `${MAX - td.length} slot${MAX - td.length !== 1 ? 's' : ''} remaining today.`;
+    note.textContent = `${MAX - activeCount} slot${MAX - activeCount !== 1 ? 's' : ''} remaining.`;
     document.getElementById('add-daily-section').style.opacity = '1';
     document.getElementById('add-daily-section').style.pointerEvents = '';
   }
@@ -1526,6 +1674,7 @@ function renderProjects() {
             <div class="project-task-text ${t.done ? 'done' : ''}">
               ${escHtml(t.title)}
               ${t.scheduledTime ? `<span style="color:var(--ink-faint);font-size:0.75rem;margin-left:0.4rem;">${formatTime(t.scheduledTime)}</span>` : ''}
+              ${t.recurPattern ? `<span class="recurring-badge">↻ ${t.recurPattern}</span>` : ''}
             </div>
             <div class="scheduled-badge ${isPast ? 'overdue' : ''}">${dateLabel}</div>
             <div class="project-actions">
@@ -1651,11 +1800,22 @@ async function toggleTask(id) {
   if (!task) return;
   task.done = !task.done;
   await dbToggleDailyTask(id, task.done);
-  if (task.done) {
-    celebrateTask(id);
-    await fillFromQueue();
+
+  // Sync done state to project_tasks if this task belongs to a project
+  if (task.projectId) {
+    const proj = state.projects.find(p => p.id === task.projectId);
+    if (proj) {
+      // Match by title + today's date (best proxy without a foreign key)
+      const projTask = proj.tasks.find(t => t.title === task.title && (t.scheduledDate === today() || !t.scheduledDate));
+      if (projTask) {
+        projTask.done = task.done;
+        await dbUpdateProjectTask(projTask.id, { done: task.done });
+      }
+    }
   }
-  renderDashboard();
+
+  if (task.done) { celebrateTask(id); }
+  render();
 }
 
 function celebrateTask(taskId) {
@@ -1666,7 +1826,7 @@ function celebrateTask(taskId) {
     el.addEventListener('animationend', () => el.classList.remove('celebrate-ring'), { once: true });
     // Confetti burst from element position
     const rect = el.getBoundingClientRect();
-    const colors = ['#8b5e3c','#c4956a','#2c2318','#b5a898','#6b5d4f','#f0ead8'];
+    const colors = ['#7c6fa0','#a896cc','#1a1625','#c5bcdf','#5c5470','#f0edf8','#d4c9e8'];
     for (let i = 0; i < 18; i++) {
       const piece = document.createElement('div');
       piece.className = 'confetti-piece';
@@ -1696,20 +1856,36 @@ async function deleteDaily(id) {
 async function addDailyTask() {
   const title = document.getElementById('daily-task-input').value.trim();
   const time = document.getElementById('daily-task-time').value || '09:00';
-  const projectId = document.getElementById('daily-task-project').value;
+  const projectId = document.getElementById('daily-task-project').value || null;
   if (!title) { document.getElementById('daily-task-input').focus(); return; }
-  if (todayTasks().length >= 7) { toast('7 tasks maximum. Remove one first.'); return; }
+  const activeTodayCount = todayTasks().filter(t => !t.done).length;
+  if (activeTodayCount >= 7) { toast('7 active tasks max. Complete or remove one first.'); return; }
 
   const btn = document.getElementById('add-daily-btn');
   btn.disabled = true;
 
-  const newId = await dbAddDailyTask({ title, time, projectId: projectId || null, date: today() });
+  const newId = await dbAddDailyTask({ title, time, projectId, date: today() });
   if (newId) {
-    state.dailyTasks.push({ id: newId, title, time, projectId: projectId || null, done: false, date: today() });
+    state.dailyTasks.push({ id: newId, title, time, projectId, done: false, date: today() });
     document.getElementById('daily-task-input').value = '';
+
+    // If linked to a project, also create a project_task row (scheduled for today)
+    if (projectId) {
+      const proj = state.projects.find(p => p.id === projectId);
+      if (proj) {
+        // Check not already in project tasks (avoid duplicate if came from confirmProjectTask)
+        const alreadyInProj = proj.tasks.some(t => t.title === title && t.scheduledDate === today());
+        if (!alreadyInProj) {
+          const ptId = await dbAddProjectTask({ title, scheduledDate: today(), scheduledTime: time }, projectId);
+          if (ptId) {
+            proj.tasks.push({ id: ptId, title, done: false, scheduledDate: today(), scheduledTime: time });
+          }
+        }
+      }
+    }
   }
   btn.disabled = false;
-  renderDashboard();
+  render();
 }
 
 async function addMasterTask() {
@@ -1878,6 +2054,7 @@ function openProjectTaskModal(projId) {
   document.getElementById('proj-task-date').value = '';
   document.getElementById('proj-task-time').value = '';
   document.getElementById('proj-task-hint').textContent = '';
+  document.getElementById('proj-task-recur').value = '';
   document.getElementById('project-task-modal').classList.add('open');
   setTimeout(() => document.getElementById('proj-task-input').focus(), 100);
 }
@@ -1915,29 +2092,31 @@ async function confirmProjectTask() {
 
   const scheduledDate = document.getElementById('proj-task-date').value || null;
   const scheduledTime = document.getElementById('proj-task-time').value || null;
+  const recurPattern = document.getElementById('proj-task-recur').value || null;
 
   if (currentEditTaskId) {
     const task = proj.tasks.find(t => t.id === currentEditTaskId);
     if (task) {
-      task.title = title; task.scheduledDate = scheduledDate; task.scheduledTime = scheduledTime;
+      task.title = title; task.scheduledDate = scheduledDate; task.scheduledTime = scheduledTime; task.recurPattern = recurPattern;
       await dbUpdateProjectTask(currentEditTaskId, { title, scheduledDate, scheduledTime });
+      if (recurPattern) await dbSaveRecurring({ title, time: scheduledTime || '09:00', projectId: currentProjectId, pattern: recurPattern });
     }
   } else {
     const newId = await dbAddProjectTask({ title, scheduledDate, scheduledTime }, currentProjectId);
-    if (newId) proj.tasks.push({ id: newId, title, done: false, scheduledDate, scheduledTime });
+    if (newId) {
+      proj.tasks.push({ id: newId, title, done: false, scheduledDate, scheduledTime, recurPattern });
+      if (recurPattern) await dbSaveRecurring({ title, time: scheduledTime || '09:00', projectId: currentProjectId, pattern: recurPattern });
+    }
   }
 
   if (scheduledDate === today()) {
     const alreadyAdded = state.dailyTasks.some(t => t.date === today() && t.title === title && t.projectId === currentProjectId);
     if (!alreadyAdded) {
-      if (todayTasks().length < 7) {
-        const newId = await dbAddDailyTask({ title, time: scheduledTime || '09:00', projectId: currentProjectId, date: today() });
-        if (newId) {
-          state.dailyTasks.push({ id: newId, title, time: scheduledTime || '09:00', projectId: currentProjectId, done: false, date: today() });
-          toast("Task added to today's Dashboard.");
-        }
-      } else {
-        toast('Dashboard full (7/7). Task queued — will appear when a slot opens.');
+      const newId = await dbAddDailyTask({ title, time: scheduledTime || '09:00', projectId: currentProjectId, date: today() });
+      if (newId) {
+        state.dailyTasks.push({ id: newId, title, time: scheduledTime || '09:00', projectId: currentProjectId, done: false, date: today() });
+        const activeCt = todayTasks().filter(t => !t.done).length;
+        toast(activeCt <= 7 ? "Task added to today's Dashboard." : 'Task saved and queued for today.');
       }
     }
   }
@@ -2106,6 +2285,7 @@ async function startApp() {
   await loadAllData();
   applyProjectOrder();
   await checkRollover();
+  await syncRecurringTasksToday();
   await syncProjectTasksToday();
 
   showLoading(false);
