@@ -305,7 +305,7 @@
   .master-btn.danger:hover { border-color: var(--red); color: var(--red); }
 
   /* === PROJECTS === */
-  .project-card { border: 1px solid var(--rule); margin-bottom: 1.5rem; background: var(--paper); }
+  /* project-card now defined below with drag support */
   .project-header { padding: 1rem 1.2rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--rule); cursor: pointer; user-select: none; }
   .project-name { font-family: 'Courier Prime', monospace; font-size: 0.82rem; color: var(--ink); letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700; }
   .project-progress-text { font-size: 0.7rem; color: var(--ink-faint); letter-spacing: 0.08em; }
@@ -407,6 +407,96 @@
   ::-webkit-scrollbar-thumb { background: var(--rule); }
 
   .hidden { display: none !important; }
+
+  /* === JOURNAL === */
+  .journal-pinned-note {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    background: var(--paper-dark); border: 1px solid var(--rule);
+    border-left: 3px solid var(--accent); padding: 0.8rem 1rem;
+    font-size: 0.78rem; color: var(--ink-light); line-height: 1.6;
+    margin-bottom: 2rem; border-radius: 2px;
+  }
+  .journal-pin-icon { flex-shrink: 0; font-size: 0.75rem; margin-top: 0.1rem; }
+  .journal-section { margin-bottom: 2rem; }
+  .journal-section-label {
+    font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--ink-faint); margin-bottom: 0.6rem;
+  }
+  .journal-textarea {
+    width: 100%; background: transparent; border: none;
+    border-bottom: 1px solid var(--rule); padding: 0.5rem 0;
+    font-family: 'Courier Prime', monospace; font-size: 0.9rem;
+    color: var(--ink); outline: none; resize: none; line-height: 1.7;
+    transition: border-color 0.2s;
+  }
+  .journal-textarea:focus { border-bottom-color: var(--accent); }
+  .journal-textarea::placeholder { color: var(--ink-faint); }
+  .journal-note-item {
+    display: flex; align-items: flex-start; gap: 0.7rem;
+    padding: 0.6rem 0; border-bottom: 1px solid var(--paper-mid);
+  }
+  .journal-note-text { flex: 1; font-size: 0.85rem; color: var(--ink); line-height: 1.5; }
+  .journal-note-tag { font-size: 0.65rem; color: var(--accent-light); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.15rem; }
+  .journal-note-del { background: none; border: none; cursor: pointer; color: var(--ink-faint); font-size: 0.75rem; padding: 0.1rem 0.3rem; transition: color 0.2s; flex-shrink: 0; }
+  .journal-note-del:hover { color: var(--red); }
+
+  /* === CELEBRATION / CONFETTI === */
+  @keyframes confetti-fall {
+    0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(80px) rotate(720deg); opacity: 0; }
+  }
+  @keyframes task-celebrate {
+    0%   { transform: scale(1); }
+    30%  { transform: scale(1.08); }
+    60%  { transform: scale(0.97); }
+    100% { transform: scale(1); }
+  }
+  .confetti-piece {
+    position: fixed; width: 7px; height: 7px; border-radius: 1px;
+    pointer-events: none; z-index: 9998;
+    animation: confetti-fall 0.9s ease-out forwards;
+  }
+  .celebrate-ring {
+    animation: task-celebrate 0.45s ease;
+  }
+
+  /* === DRAGGABLE PROJECT CARDS === */
+  .project-card {
+    border: 1px solid var(--rule); margin-bottom: 1.5rem; background: var(--paper);
+    cursor: grab; user-select: none;
+    transition: box-shadow 0.15s, opacity 0.15s;
+  }
+  .project-card:active { cursor: grabbing; }
+  .project-card.proj-dragging { opacity: 0.4; box-shadow: none; }
+  .project-card.proj-drag-over { border-top: 2px solid var(--accent); }
+
+  /* === DASHBOARD OVERFLOW TASKS === */
+  .overflow-reveal {
+    margin-top: 1.2rem; padding: 0.8rem 1rem;
+    border: 1px dashed var(--rule); border-radius: 2px;
+    background: var(--paper-dark);
+  }
+  .overflow-reveal-label {
+    font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-faint); margin-bottom: 0.6rem;
+  }
+  .overflow-task-item {
+    display: flex; align-items: center; gap: 0.7rem;
+    padding: 0.4rem 0; border-bottom: 1px solid var(--paper-mid);
+    font-size: 0.82rem; color: var(--ink-light);
+  }
+  .overflow-task-item:last-child { border-bottom: none; }
+  .overflow-expand-btn {
+    margin-top: 1rem; padding: 0.5rem 1rem; width: 100%;
+    background: none; border: 1px solid var(--rule);
+    font-family: 'Courier Prime', monospace; font-size: 0.72rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-faint); cursor: pointer; transition: all 0.2s;
+  }
+  .overflow-expand-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* === TIME CONFLICT BADGE === */
+  .time-conflict { background: #fff3cd; border-left: 3px solid var(--accent-light); }
 </style>
 </head>
 <body>
@@ -475,8 +565,9 @@
 
   <nav class="tabs">
     <button class="tab active" onclick="switchTab('dashboard', this)">Dashboard</button>
-    <button class="tab" onclick="switchTab('master', this)">Master List</button>
     <button class="tab" onclick="switchTab('projects', this)">Projects</button>
+    <button class="tab" onclick="switchTab('master', this)">Master List</button>
+    <button class="tab" onclick="switchTab('journal', this)">Journal</button>
   </nav>
 
   <main class="app-body">
@@ -514,7 +605,6 @@
       <div class="add-form" style="margin-bottom:2rem;">
         <input type="text" class="add-input" id="master-input" placeholder="Capture a thought, task, idea..." maxlength="120">
         <div class="add-row">
-          <select class="add-select" id="master-project"></select>
           <button class="btn-add" onclick="addMasterTask()">+ Capture</button>
         </div>
       </div>
@@ -542,7 +632,76 @@
 
       <div id="projects-list"></div>
     </div>
+
+    <!-- JOURNAL -->
+    <div class="view" id="view-journal">
+      <div class="section-header">
+        <div class="section-title">Weekly Journal</div>
+        <div class="section-count" id="journal-week-label"></div>
+      </div>
+
+      <!-- Pinned reminder -->
+      <div class="journal-pinned-note">
+        <span class="journal-pin-icon">📌</span>
+        <span>Keep this space clean. Only add what you truly can't afford to forget right now. Clear it regularly — this is a short-term holding space, not an archive.</span>
+      </div>
+
+      <!-- Week Theme -->
+      <div class="journal-section">
+        <div class="journal-section-label">Theme for this week</div>
+        <textarea class="journal-textarea" id="journal-theme" placeholder="What's the one word or phrase that defines this week?..." rows="2" oninput="saveJournal()"></textarea>
+      </div>
+
+      <!-- Working On -->
+      <div class="journal-section">
+        <div class="journal-section-label">Something I'm working on / figuring out</div>
+        <textarea class="journal-textarea" id="journal-working" placeholder="A problem, idea, or thing on your mind..." rows="3" oninput="saveJournal()"></textarea>
+      </div>
+
+      <!-- Don't Forget -->
+      <div class="journal-section">
+        <div class="journal-section-label">Don't forget</div>
+        <div id="journal-notes-list"></div>
+        <div class="add-form" style="margin-top:0.8rem;">
+          <div style="display:flex;gap:0.6rem;align-items:center;">
+            <input type="text" class="add-input" id="journal-note-input" placeholder="Something short-term to remember..." maxlength="160" style="flex:1;">
+            <select class="add-select" id="journal-note-task" style="flex:1;min-width:110px;font-size:0.75rem;"></select>
+            <button class="btn-add" style="padding:0.4rem 0.8rem;" onclick="addJournalNote()">+ Add</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
+</div>
+
+<!-- PUSH TO PROJECT MODAL -->
+<div class="modal-overlay" id="push-project-modal">
+  <div class="modal">
+    <div class="modal-title" id="push-modal-title">Push to Project</div>
+    <div class="modal-sub">Select a project and optionally schedule this task.</div>
+    <label class="field-label">Project</label>
+    <select class="schedule-select" id="push-project-select" style="margin-bottom:1.2rem;"></select>
+    <label class="field-label">Schedule for (optional)</label>
+    <div style="display:flex;gap:0.8rem;margin-bottom:1rem;flex-wrap:wrap;">
+      <input type="date" class="schedule-select" id="push-task-date" style="flex:1;min-width:130px;">
+      <select class="schedule-select" id="push-task-time" style="flex:1;min-width:110px;">
+        <option value="">No time</option>
+        <option value="06:00">6:00 AM</option><option value="07:00">7:00 AM</option>
+        <option value="08:00">8:00 AM</option><option value="09:00">9:00 AM</option>
+        <option value="10:00">10:00 AM</option><option value="11:00">11:00 AM</option>
+        <option value="12:00">12:00 PM</option><option value="13:00">1:00 PM</option>
+        <option value="14:00">2:00 PM</option><option value="15:00">3:00 PM</option>
+        <option value="16:00">4:00 PM</option><option value="17:00">5:00 PM</option>
+        <option value="18:00">6:00 PM</option><option value="19:00">7:00 PM</option>
+        <option value="20:00">8:00 PM</option><option value="21:00">9:00 PM</option>
+      </select>
+    </div>
+    <div id="push-task-hint" style="font-size:0.72rem;color:var(--ink-faint);margin-bottom:1rem;min-height:1.2em;"></div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeModal('push-project-modal')">Cancel</button>
+      <button class="btn-primary" style="padding:0.5rem 1.2rem;width:auto;" onclick="confirmPushToProject()">Push to Project</button>
+    </div>
+  </div>
 </div>
 
 <!-- REFLECTION MODAL -->
@@ -681,7 +840,8 @@ let state = {
   masterTasks: [],
   projects: [],     // each project has .tasks[] loaded separately
   winDays: [],
-  lastChecked: null
+  lastChecked: null,
+  journal: {}       // keyed by week string, holds {theme, working, notes:[]}
 };
 
 let currentUser = null;
@@ -732,6 +892,94 @@ function toast(msg) {
 
 function escHtml(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function getWeekKey() {
+  const d = new Date();
+  const day = d.getDay(); // 0=Sun
+  const mon = new Date(d);
+  mon.setDate(d.getDate() - ((day + 6) % 7));
+  return mon.toISOString().slice(0, 10);
+}
+
+function getWeekLabel() {
+  const wk = getWeekKey();
+  const start = new Date(wk + 'T00:00:00');
+  const end = new Date(start); end.setDate(start.getDate() + 6);
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `Week of ${months[start.getMonth()]} ${start.getDate()} – ${months[end.getMonth()]} ${end.getDate()}`;
+}
+
+function loadJournal() {
+  const key = `tl_journal_${currentUser.id}`;
+  try { state.journal = JSON.parse(localStorage.getItem(key) || '{}'); } catch(e) { state.journal = {}; }
+}
+
+function saveJournal() {
+  const wk = getWeekKey();
+  if (!state.journal[wk]) state.journal[wk] = { theme: '', working: '', notes: [] };
+  state.journal[wk].theme = document.getElementById('journal-theme').value;
+  state.journal[wk].working = document.getElementById('journal-working').value;
+  localStorage.setItem(`tl_journal_${currentUser.id}`, JSON.stringify(state.journal));
+}
+
+function addJournalNote() {
+  const text = document.getElementById('journal-note-input').value.trim();
+  if (!text) return;
+  const wk = getWeekKey();
+  if (!state.journal[wk]) state.journal[wk] = { theme: '', working: '', notes: [] };
+  const taskId = document.getElementById('journal-note-task').value;
+  state.journal[wk].notes.push({ id: uid(), text, taskId: taskId || null, ts: Date.now() });
+  document.getElementById('journal-note-input').value = '';
+  localStorage.setItem(`tl_journal_${currentUser.id}`, JSON.stringify(state.journal));
+  renderJournal();
+}
+
+function deleteJournalNote(noteId) {
+  const wk = getWeekKey();
+  if (!state.journal[wk]) return;
+  state.journal[wk].notes = state.journal[wk].notes.filter(n => n.id !== noteId);
+  localStorage.setItem(`tl_journal_${currentUser.id}`, JSON.stringify(state.journal));
+  renderJournal();
+}
+
+function renderJournal() {
+  const wk = getWeekKey();
+  const entry = state.journal[wk] || { theme: '', working: '', notes: [] };
+  document.getElementById('journal-week-label').textContent = getWeekLabel();
+  document.getElementById('journal-theme').value = entry.theme || '';
+  document.getElementById('journal-working').value = entry.working || '';
+
+  // populate task dropdown for journal notes
+  const sel = document.getElementById('journal-note-task');
+  if (sel) {
+    const allTasks = [
+      ...state.dailyTasks.filter(t => t.date === today() && !t.done),
+      ...state.masterTasks
+    ];
+    sel.innerHTML = `<option value="">— tag a task (optional)</option>` +
+      allTasks.map(t => `<option value="${t.id}">${escHtml(t.title.slice(0,40))}</option>`).join('');
+  }
+
+  const notesList = document.getElementById('journal-notes-list');
+  if (!notesList) return;
+  if (!entry.notes || entry.notes.length === 0) {
+    notesList.innerHTML = `<div style="color:var(--ink-faint);font-size:0.82rem;padding:0.5rem 0;">Nothing here yet.</div>`;
+    return;
+  }
+  notesList.innerHTML = entry.notes.map(n => {
+    const taskLabel = n.taskId ? (() => {
+      const t = [...state.dailyTasks, ...state.masterTasks].find(t => t.id === n.taskId);
+      return t ? `<div class="journal-note-tag">↳ ${escHtml(t.title.slice(0,40))}</div>` : '';
+    })() : '';
+    return `<div class="journal-note-item">
+      <div style="flex:1;">
+        <div class="journal-note-text">${escHtml(n.text)}</div>
+        ${taskLabel}
+      </div>
+      <button class="journal-note-del" onclick="deleteJournalNote('${n.id}')">✕</button>
+    </div>`;
+  }).join('');
 }
 
 function showLoading(show) {
@@ -851,6 +1099,7 @@ async function loadAllData() {
 
   // Load last-checked from localStorage (it's UI state, not user data)
   state.lastChecked = localStorage.getItem(`tl_lastchecked_${currentUser.id}`);
+  loadJournal();
 }
 
 // ============================================================
@@ -972,6 +1221,7 @@ async function checkRollover() {
 
   state.lastChecked = td;
   localStorage.setItem(`tl_lastchecked_${currentUser.id}`, td);
+  dashOverflowUnlocked = false; // reset each day
 }
 
 // Returns all tasks scheduled for today (from projects) not yet in daily_tasks
@@ -1027,7 +1277,11 @@ function render() {
   renderMaster();
   renderProjects();
   renderProjectDropdowns();
+  renderJournal();
 }
+
+// Track if user has unlocked the "see more" extra tasks
+let dashOverflowUnlocked = false;
 
 function renderDashboard() {
   const td = todayTasks();
@@ -1057,7 +1311,6 @@ function renderDashboard() {
   const MAX = 7;
 
   if (td.length === 0) {
-    // Generate 7 empty slots starting from next even hour
     const nowH = new Date().getHours();
     const startH = nowH < 23 ? nowH + 1 : 0;
     for (let i = 0; i < 7; i++) {
@@ -1069,24 +1322,39 @@ function renderDashboard() {
       container.appendChild(el);
     }
   } else {
-    td.forEach((task, idx) => {
+    // Determine which tasks to show (max 7 visible)
+    // If done >= 4, user may unlock to see up to 7; otherwise show max 7
+    // First, visible = first 7. Hidden = tasks 8+ (if any)
+    const visible = td.slice(0, MAX);
+    const hidden = td.slice(MAX); // beyond 7 stay hidden from view even if unlocked
+
+    // Detect time conflicts
+    const timeCounts = {};
+    visible.forEach(t => { const k = t.time || ''; timeCounts[k] = (timeCounts[k]||0)+1; });
+
+    visible.forEach((task, idx) => {
       const el = document.createElement('div');
       el.className = 'time-block';
+      if (timeCounts[task.time || ''] > 1 && task.time) el.classList.add('time-conflict');
       el.draggable = true;
       el.dataset.taskId = task.id;
       const pname = getProjectName(task.projectId);
+      const conflictBadge = (timeCounts[task.time || ''] > 1 && task.time)
+        ? `<span class="task-tag" style="color:var(--accent);font-size:0.63rem;">⚠ same time</span>` : '';
       el.innerHTML = `
         <div class="time-label" style="cursor:grab;color:var(--ink-faint);font-size:0.65rem;padding-top:3px;" title="Drag to reorder">⠿</div>
         <div class="time-label">${formatTime(task.time)}</div>
         <div class="task-check ${task.done ? 'done' : ''}" onclick="toggleTask('${task.id}')"></div>
         <div class="task-content">
           <div class="task-title ${task.done ? 'done' : ''}">${escHtml(task.title)}</div>
-          <div class="task-meta">${pname ? `<span class="task-tag project">${escHtml(pname)}</span>` : ''}</div>
+          <div class="task-meta">
+            ${pname ? `<span class="task-tag project">${escHtml(pname)}</span>` : ''}
+            ${conflictBadge}
+          </div>
         </div>
         <div class="task-actions">
           <button class="task-btn" onclick="deleteDaily('${task.id}')" title="Remove">✕</button>
         </div>`;
-      // Drag events
       el.addEventListener('dragstart', e => {
         e.dataTransfer.setData('text/plain', task.id);
         el.classList.add('dragging');
@@ -1099,7 +1367,6 @@ function renderDashboard() {
         el.classList.remove('drag-over');
         const draggedId = e.dataTransfer.getData('text/plain');
         if (draggedId === task.id) return;
-        // Reorder in state
         const allToday = state.dailyTasks.filter(t => t.date === today());
         const others = state.dailyTasks.filter(t => t.date !== today());
         const fromIdx = allToday.findIndex(t => t.id === draggedId);
@@ -1107,22 +1374,58 @@ function renderDashboard() {
         if (fromIdx === -1 || toIdx === -1) return;
         const [moved] = allToday.splice(fromIdx, 1);
         allToday.splice(toIdx, 0, moved);
-        // Reassign times to reflect new order
-        allToday.forEach((t, i) => {
-          const base = allToday[0].time || '09:00';
-          // Keep original times but just reorder visually via state order
-        });
         state.dailyTasks = [...others, ...allToday];
         renderDashboard();
       });
       container.appendChild(el);
     });
 
-    for (let i = 0; i < MAX - td.length; i++) {
+    // Fill empty slots up to 7
+    for (let i = 0; i < MAX - visible.length; i++) {
       const el = document.createElement('div');
       el.className = 'empty-slot';
       el.innerHTML = `<div class="empty-time">—</div><div class="empty-line"></div>`;
       container.appendChild(el);
+    }
+
+    // --- Overflow logic ---
+    // If done < 4: show nothing about hidden tasks (no peek, no reveal)
+    // If done >= 4 and not unlocked: show "See more" button
+    // If unlocked: show overflow section (still hidden beyond 7 is just listed but truncated to show +info)
+    const queueCount = getPendingTodayTasks().length;
+    const hiddenQueue = hidden.length + queueCount; // tasks beyond 7
+
+    if (done >= 4 && hiddenQueue > 0) {
+      const overflowDiv = document.createElement('div');
+      overflowDiv.className = 'overflow-reveal';
+      if (!dashOverflowUnlocked) {
+        overflowDiv.innerHTML = `
+          <div class="overflow-reveal-label">You've cleared 4 tasks. Good work.</div>
+          <div style="font-size:0.8rem;color:var(--ink-light);margin-bottom:0.6rem;">${hiddenQueue} more task${hiddenQueue!==1?'s':''} waiting — want to see them?</div>
+          <button class="overflow-expand-btn" onclick="unlockOverflow()">Show remaining tasks →</button>`;
+      } else {
+        // Show the hidden tasks (still capped: tasks 8-14 visible in overflow list, rest stay truly hidden)
+        const overflowVisible = hidden.slice(0, 7);
+        const overflowStillHidden = hidden.length - overflowVisible.length + queueCount;
+        let html = `<div class="overflow-reveal-label">Remaining tasks for today</div>`;
+        overflowVisible.forEach(t => {
+          const pname = getProjectName(t.projectId);
+          html += `<div class="overflow-task-item">
+            <div class="task-check ${t.done?'done':''}" onclick="toggleTask('${t.id}')"></div>
+            <div style="flex:1;">
+              <div style="${t.done?'text-decoration:line-through;color:var(--ink-faint);':''}">${escHtml(t.title)}</div>
+              ${pname ? `<div style="font-size:0.65rem;color:var(--accent-light);text-transform:uppercase;">${escHtml(pname)}</div>` : ''}
+            </div>
+            <div style="font-size:0.68rem;color:var(--ink-faint);">${formatTime(t.time)}</div>
+            <button class="task-btn" onclick="deleteDaily('${t.id}')" style="opacity:0.5;">✕</button>
+          </div>`;
+        });
+        if (overflowStillHidden > 0) {
+          html += `<div style="font-size:0.72rem;color:var(--ink-faint);padding:0.5rem 0;text-align:center;">${overflowStillHidden} more task${overflowStillHidden!==1?'s':''} exist beyond today — keep going.</div>`;
+        }
+        overflowDiv.innerHTML = html;
+      }
+      container.appendChild(overflowDiv);
     }
   }
 
@@ -1145,9 +1448,9 @@ function renderDashboard() {
   container.appendChild(tenBlock);
 
   const note = document.getElementById('task-limit-note');
-  const queueCount = getPendingTodayTasks().length;
+  const queueCount2 = getPendingTodayTasks().length;
   if (td.length >= MAX) {
-    note.innerHTML = `Today's 7 tasks are set.${queueCount > 0 ? ` <span style="color:var(--accent);">+${queueCount} queued for today — will appear as you finish.</span>` : ''}`;
+    note.innerHTML = `Today's 7 tasks are set.${queueCount2 > 0 ? ` <span style="color:var(--accent);">+${queueCount2} queued — will appear as you finish.</span>` : ''}`;
     document.getElementById('add-daily-section').style.opacity = '0.5';
     document.getElementById('add-daily-section').style.pointerEvents = 'none';
   } else {
@@ -1157,13 +1460,18 @@ function renderDashboard() {
   }
 }
 
+function unlockOverflow() {
+  dashOverflowUnlocked = true;
+  renderDashboard();
+}
+
 function renderMaster() {
   const list = document.getElementById('master-list');
   const items = state.masterTasks.filter(t => !t.isTenMin);
   document.getElementById('master-count').textContent = `${items.length} item${items.length !== 1 ? 's' : ''}`;
 
   if (items.length === 0) {
-    list.innerHTML = `<div style="color:var(--ink-faint);font-size:0.85rem;padding:1rem 0;">Empty. Capture your thoughts here.</div>`;
+    list.innerHTML = `<div style="color:var(--ink-faint);font-size:0.85rem;padding:1rem 0;">Empty. Capture your thoughts here. Push tasks to projects to schedule them.</div>`;
     return;
   }
 
@@ -1180,7 +1488,8 @@ function renderMaster() {
         <div class="master-item-meta">${pname ? `↳ ${escHtml(pname)}` : 'Unassigned'}</div>
       </div>
       <div class="master-item-actions">
-        ${canSchedule ? `<button class="master-btn" onclick="openScheduleModal('${task.id}','master')">Schedule</button>` : ''}
+        ${state.projects.length > 0 ? `<button class="master-btn" onclick="openPushToProject('${task.id}')">→ Project</button>` : ''}
+        ${canSchedule ? `<button class="master-btn" onclick="openScheduleModal('${task.id}','master')">Today</button>` : ''}
         <button class="master-btn" onclick="markTenMin('${task.id}')">10-min</button>
         <button class="master-btn danger" onclick="deleteMaster('${task.id}')">✕</button>
       </div>`;
@@ -1205,7 +1514,6 @@ function renderProjects() {
     const backlog = tasks.filter(t => !t.scheduledDate);
 
     let tasksHtml = '';
-
     if (scheduled.length > 0) {
       tasksHtml += `<div style="font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-faint);padding:0.6rem 0 0.3rem;">Scheduled</div>`;
       tasksHtml += scheduled.map(t => {
@@ -1227,7 +1535,6 @@ function renderProjects() {
           </div>`;
       }).join('');
     }
-
     if (backlog.length > 0) {
       tasksHtml += `<div style="font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-faint);padding:0.6rem 0 0.3rem;${scheduled.length > 0 ? 'margin-top:0.5rem;' : ''}">Backlog</div>`;
       tasksHtml += backlog.map(t => `
@@ -1240,16 +1547,20 @@ function renderProjects() {
           </div>
         </div>`).join('');
     }
-
-    if (tasks.length === 0) tasksHtml = `<div style="color:var(--ink-faint);font-size:0.8rem;padding:0.8rem 0;">No tasks yet.</div>`;
+    if (tasks.length === 0) tasksHtml = `<div style="color:var(--ink-faint);font-size:0.8rem;padding:0.8rem 0;">No tasks yet. Push tasks from Master List or add directly.</div>`;
 
     const card = document.createElement('div');
     card.className = 'project-card';
+    card.draggable = true;
+    card.dataset.projId = proj.id;
     card.innerHTML = `
       <div class="project-header" onclick="toggleProject('${proj.id}')">
-        <div>
-          <div class="project-name">${escHtml(proj.name)}</div>
-          ${proj.desc ? `<div style="font-size:0.72rem;color:var(--ink-faint);margin-top:0.15rem;">${escHtml(proj.desc)}</div>` : ''}
+        <div style="display:flex;align-items:center;gap:0.6rem;">
+          <span style="color:var(--ink-faint);font-size:0.65rem;cursor:grab;" title="Drag to reorder">⠿</span>
+          <div>
+            <div class="project-name">${escHtml(proj.name)}</div>
+            ${proj.desc ? `<div style="font-size:0.72rem;color:var(--ink-faint);margin-top:0.15rem;">${escHtml(proj.desc)}</div>` : ''}
+          </div>
         </div>
         <div style="text-align:right;display:flex;align-items:center;gap:0.8rem;">
           <button class="task-btn" onclick="event.stopPropagation();openRenameProject('${proj.id}')" title="Rename" style="font-size:0.65rem;letter-spacing:0.08em;color:var(--ink-faint);">rename</button>
@@ -1267,17 +1578,69 @@ function renderProjects() {
           <button class="master-btn danger" onclick="deleteProject('${proj.id}')" style="margin-left:0.5rem;">Delete project</button>
         </div>
       </div>`;
+
+    // Drag-to-reorder project cards
+    card.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('proj-drag', proj.id);
+      e.dataTransfer.effectAllowed = 'move';
+      setTimeout(() => card.classList.add('proj-dragging'), 0);
+    });
+    card.addEventListener('dragend', () => card.classList.remove('proj-dragging'));
+    card.addEventListener('dragover', e => {
+      e.preventDefault();
+      // Only respond to project drags, not task drags
+      card.classList.add('proj-drag-over');
+    });
+    card.addEventListener('dragleave', () => card.classList.remove('proj-drag-over'));
+    card.addEventListener('drop', e => {
+      e.preventDefault();
+      card.classList.remove('proj-drag-over');
+      const fromId = e.dataTransfer.getData('proj-drag');
+      if (!fromId || fromId === proj.id) return;
+      const fromIdx = state.projects.findIndex(p => p.id === fromId);
+      const toIdx = state.projects.findIndex(p => p.id === proj.id);
+      if (fromIdx === -1 || toIdx === -1) return;
+      const [moved] = state.projects.splice(fromIdx, 1);
+      state.projects.splice(toIdx, 0, moved);
+      renderProjects();
+      saveProjectOrder();
+    });
+
     container.appendChild(card);
   });
+}
+
+function saveProjectOrder() {
+  // Persist order to localStorage (lightweight, no extra DB column needed)
+  const order = state.projects.map(p => p.id);
+  localStorage.setItem(`tl_proj_order_${currentUser.id}`, JSON.stringify(order));
+}
+
+function applyProjectOrder() {
+  const saved = localStorage.getItem(`tl_proj_order_${currentUser.id}`);
+  if (!saved) return;
+  try {
+    const order = JSON.parse(saved);
+    state.projects.sort((a, b) => {
+      const ai = order.indexOf(a.id);
+      const bi = order.indexOf(b.id);
+      if (ai === -1 && bi === -1) return 0;
+      if (ai === -1) return 1;
+      if (bi === -1) return -1;
+      return ai - bi;
+    });
+  } catch(e) {}
 }
 
 function renderProjectDropdowns() {
   const opts = `<option value="">No project</option>` +
     state.projects.map(p => `<option value="${p.id}">${escHtml(p.name)}</option>`).join('');
-  ['daily-task-project','master-project'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.innerHTML = opts;
-  });
+  // Only daily-task project dropdown (master-project removed — use push-to-project instead)
+  const dpEl = document.getElementById('daily-task-project');
+  if (dpEl) dpEl.innerHTML = opts;
+  // Push modal project select
+  const pushEl = document.getElementById('push-project-select');
+  if (pushEl) pushEl.innerHTML = state.projects.map(p => `<option value="${p.id}">${escHtml(p.name)}</option>`).join('');
 }
 
 // ============================================================
@@ -1288,8 +1651,39 @@ async function toggleTask(id) {
   if (!task) return;
   task.done = !task.done;
   await dbToggleDailyTask(id, task.done);
-  if (task.done) await fillFromQueue();
+  if (task.done) {
+    celebrateTask(id);
+    await fillFromQueue();
+  }
   renderDashboard();
+}
+
+function celebrateTask(taskId) {
+  // Find the check element
+  const el = document.querySelector(`[data-task-id="${taskId}"] .task-check`);
+  if (el) {
+    el.classList.add('celebrate-ring');
+    el.addEventListener('animationend', () => el.classList.remove('celebrate-ring'), { once: true });
+    // Confetti burst from element position
+    const rect = el.getBoundingClientRect();
+    const colors = ['#8b5e3c','#c4956a','#2c2318','#b5a898','#6b5d4f','#f0ead8'];
+    for (let i = 0; i < 18; i++) {
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.style.cssText = `
+        left:${rect.left + rect.width/2 + (Math.random()-0.5)*60}px;
+        top:${rect.top + window.scrollY + (Math.random()-0.5)*10}px;
+        background:${colors[Math.floor(Math.random()*colors.length)]};
+        width:${4+Math.random()*6}px;
+        height:${4+Math.random()*6}px;
+        border-radius:${Math.random() > 0.5 ? '50%' : '1px'};
+        animation-duration:${0.5+Math.random()*0.7}s;
+        animation-delay:${Math.random()*0.15}s;
+      `;
+      document.body.appendChild(piece);
+      piece.addEventListener('animationend', () => piece.remove());
+    }
+  }
 }
 
 async function deleteDaily(id) {
@@ -1320,14 +1714,14 @@ async function addDailyTask() {
 
 async function addMasterTask() {
   const title = document.getElementById('master-input').value.trim();
-  const projectId = document.getElementById('master-project').value;
   if (!title) { document.getElementById('master-input').focus(); return; }
 
-  const newId = await dbAddMasterTask({ title, projectId: projectId || null });
+  const newId = await dbAddMasterTask({ title, projectId: null });
   if (newId) {
-    state.masterTasks.push({ id: newId, title, projectId: projectId || null, isTenMin: false });
+    state.masterTasks.push({ id: newId, title, projectId: null, isTenMin: false });
     document.getElementById('master-input').value = '';
     renderMaster();
+    renderJournal(); // refresh task tag dropdown
   }
 }
 
@@ -1456,6 +1850,14 @@ async function toggleProjectTask(projId, taskId) {
   if (!task) return;
   task.done = !task.done;
   await dbUpdateProjectTask(taskId, { done: task.done });
+  if (task.done) {
+    // mini celebrate on project task
+    const el = document.querySelector(`[onclick="toggleProjectTask('${projId}','${taskId}')"]`);
+    if (el) {
+      el.classList.add('celebrate-ring');
+      el.addEventListener('animationend', () => el.classList.remove('celebrate-ring'), { once: true });
+    }
+  }
   renderProjects();
 }
 
@@ -1543,6 +1945,81 @@ async function confirmProjectTask() {
   render(); closeModal('project-task-modal');
 }
 
+// Push Master Task → Project
+let pushTargetId = null;
+
+function openPushToProject(taskId) {
+  pushTargetId = taskId;
+  const task = state.masterTasks.find(t => t.id === taskId);
+  document.getElementById('push-modal-title').textContent = task ? `Push: "${task.title.slice(0,35)}${task.title.length>35?'…':''}"` : 'Push to Project';
+  document.getElementById('push-task-date').value = '';
+  document.getElementById('push-task-time').value = '';
+  document.getElementById('push-task-hint').textContent = 'No date set — task goes to project backlog.';
+  renderProjectDropdowns();
+  document.getElementById('push-project-modal').classList.add('open');
+}
+
+function updatePushTaskHint() {
+  const date = document.getElementById('push-task-date').value;
+  const hint = document.getElementById('push-task-hint');
+  if (!date) { hint.textContent = 'No date set — task goes to project backlog.'; return; }
+  if (date === today()) { hint.textContent = "→ Will appear on today's Dashboard (if under 7 tasks)."; return; }
+  if (date < today()) { hint.textContent = '↳ Past date — task will sit in backlog.'; return; }
+  const d = new Date(date + 'T00:00:00');
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  hint.textContent = `→ Scheduled for ${days[d.getDay()]}, ${date}.`;
+}
+
+async function confirmPushToProject() {
+  if (!pushTargetId) return;
+  const projId = document.getElementById('push-project-select').value;
+  if (!projId) { toast('Pick a project first.'); return; }
+
+  const masterTask = state.masterTasks.find(t => t.id === pushTargetId);
+  if (!masterTask) return;
+
+  const proj = state.projects.find(p => p.id === projId);
+  if (!proj) return;
+
+  const scheduledDate = document.getElementById('push-task-date').value || null;
+  const scheduledTime = document.getElementById('push-task-time').value || null;
+
+  // Add to project_tasks in DB
+  const newProjTaskId = await dbAddProjectTask(
+    { title: masterTask.title, scheduledDate, scheduledTime },
+    projId
+  );
+  if (newProjTaskId) {
+    proj.tasks.push({ id: newProjTaskId, title: masterTask.title, done: false, scheduledDate, scheduledTime });
+  }
+
+  // If scheduled for today, also push to dashboard
+  if (scheduledDate === today()) {
+    if (todayTasks().length < 7) {
+      const newDailyId = await dbAddDailyTask({
+        title: masterTask.title, time: scheduledTime || '09:00',
+        projectId: projId, date: today()
+      });
+      if (newDailyId) {
+        state.dailyTasks.push({ id: newDailyId, title: masterTask.title, time: scheduledTime || '09:00', projectId: projId, done: false, date: today() });
+        toast(`Pushed to ${proj.name} + added to today's Dashboard.`);
+      }
+    } else {
+      toast(`Pushed to ${proj.name}. Dashboard full — queued.`);
+    }
+  } else {
+    toast(`Pushed to ${proj.name}.`);
+  }
+
+  // Remove from master list
+  state.masterTasks = state.masterTasks.filter(t => t.id !== pushTargetId);
+  await dbDeleteMasterTask(pushTargetId);
+  pushTargetId = null;
+
+  closeModal('push-project-modal');
+  render();
+}
+
 // Reflection
 let pendingReflectionTasks = [];
 
@@ -1627,6 +2104,7 @@ async function startApp() {
   document.getElementById('login-screen').style.display = 'none';
 
   await loadAllData();
+  applyProjectOrder();
   await checkRollover();
   await syncProjectTasksToday();
 
@@ -1650,8 +2128,11 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('proj-task-input').addEventListener('keydown', e => { if (e.key === 'Enter') confirmProjectTask(); });
   document.getElementById('proj-task-date').addEventListener('change', updateProjTaskHint);
   document.getElementById('proj-task-time').addEventListener('change', updateProjTaskHint);
+  document.getElementById('push-task-date').addEventListener('change', updatePushTaskHint);
+  document.getElementById('push-task-time').addEventListener('change', updatePushTaskHint);
+  document.getElementById('journal-note-input').addEventListener('keydown', e => { if (e.key === 'Enter') addJournalNote(); });
 
-  ['reflection-modal','schedule-modal','cal-modal','project-task-modal','rename-project-modal'].forEach(id => {
+  ['reflection-modal','schedule-modal','cal-modal','project-task-modal','rename-project-modal','push-project-modal'].forEach(id => {
     document.getElementById(id).addEventListener('click', function(e) {
       if (e.target === this) closeModal(id);
     });
