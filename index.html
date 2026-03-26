@@ -752,6 +752,7 @@
       <input type="date" class="schedule-select" id="push-task-date" style="flex:1;min-width:130px;">
       <select class="schedule-select" id="push-task-time" style="flex:1;min-width:110px;">
         <option value="">No time</option>
+        <option value="04:00">4:00 AM</option><option value="05:00">5:00 AM</option>
         <option value="06:00">6:00 AM</option><option value="07:00">7:00 AM</option>
         <option value="08:00">8:00 AM</option><option value="09:00">9:00 AM</option>
         <option value="10:00">10:00 AM</option><option value="11:00">11:00 AM</option>
@@ -760,6 +761,7 @@
         <option value="16:00">4:00 PM</option><option value="17:00">5:00 PM</option>
         <option value="18:00">6:00 PM</option><option value="19:00">7:00 PM</option>
         <option value="20:00">8:00 PM</option><option value="21:00">9:00 PM</option>
+        <option value="22:00">10:00 PM</option><option value="23:00">11:00 PM</option>
       </select>
     </div>
     <div id="push-task-hint" style="font-size:0.72rem;color:var(--ink-faint);margin-bottom:1rem;min-height:1.2em;"></div>
@@ -1410,34 +1412,40 @@ function render() {
 let dashOverflowUnlocked = false;
 
 function renderDashboard() {
+  const MAX = 7;
   const td = todayTasks();
-  const done = td.filter(t => t.done).length;
+  const activeTasks = td.filter(t => !t.done);
+  const doneTasks = td.filter(t => t.done);
+  const hiddenActive = activeTasks.slice(7); // tasks queued beyond the 7 shown
+  const doneCount = doneTasks.length;
+  const activeCount = activeTasks.length;
   const total = td.length;
-  const remaining = total - done;
 
+  // Header
   document.getElementById('day-title').textContent = getDayLabel();
   document.getElementById('day-progress').textContent =
     total === 0 ? 'No tasks scheduled yet' :
-    remaining === 0 ? `All ${total} tasks complete. Well done.` :
-    `${remaining} of ${total} task${remaining !== 1 ? 's' : ''} remaining`;
+    activeCount === 0 && doneCount > 0 ? `All ${doneCount} tasks complete. Well done.` :
+    `${activeCount} active · ${doneCount} done`;
 
-  const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+  const pct = total === 0 ? 0 : Math.round((doneCount / total) * 100);
   document.getElementById('progress-fill').style.width = pct + '%';
 
-  const container = document.getElementById('dashboard-tasks');
-  container.innerHTML = '';
-
-  // Check win day
-  if (total > 0 && done === total && !state.winDays.includes(today())) {
+  // Win day check
+  if (total > 0 && activeCount === 0 && !state.winDays.includes(today())) {
     state.winDays.push(today());
     dbAddWinDay(today());
     toast('All tasks complete. Today is a Win Day. ✓');
   }
 
-  if (td.length === 0) {
+  const container = document.getElementById('dashboard-tasks');
+  container.innerHTML = '';
+
+  if (total === 0) {
+    // Empty state: show time slots from current hour
     const nowH = new Date().getHours();
     const startH = nowH < 23 ? nowH + 1 : 0;
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < MAX; i++) {
       const h = (startH + i) % 24;
       const label = h === 0 ? '12:00 AM' : h < 12 ? `${h}:00 AM` : h === 12 ? '12:00 PM' : `${h-12}:00 PM`;
       const el = document.createElement('div');
@@ -1446,19 +1454,14 @@ function renderDashboard() {
       container.appendChild(el);
     }
   } else {
-    const MAX = 7;
-    // Split: active (not done) vs done
-    const active = td.filter(t => !t.done);
-    const done_tasks = td.filter(t => t.done);
-    // Show up to 7 active tasks; rest are "queued" (already in DB, just not displayed)
-    const visible = active.slice(0, MAX);
-    const hidden = active.slice(MAX); // active tasks beyond the 7 shown
+    // Show up to MAX active tasks
+    const visibleActive = activeTasks.slice(0, MAX);
 
-    // Detect time conflicts
+    // Time conflict detection
     const timeCounts = {};
-    visible.forEach(t => { const k = t.time || ''; timeCounts[k] = (timeCounts[k]||0)+1; });
+    visibleActive.forEach(t => { const k = t.time || ''; timeCounts[k] = (timeCounts[k]||0)+1; });
 
-    visible.forEach((task, idx) => {
+    visibleActive.forEach(task => {
       const el = document.createElement('div');
       el.className = 'time-block';
       if (timeCounts[task.time || ''] > 1 && task.time) el.classList.add('time-conflict');
@@ -1470,9 +1473,9 @@ function renderDashboard() {
       el.innerHTML = `
         <div class="time-label" style="cursor:grab;color:var(--ink-faint);font-size:0.65rem;padding-top:3px;" title="Drag to reorder">⠿</div>
         <div class="time-label">${formatTime(task.time)}</div>
-        <div class="task-check ${task.done ? 'done' : ''}" onclick="toggleTask('${task.id}')"></div>
+        <div class="task-check" onclick="toggleTask('${task.id}')"></div>
         <div class="task-content">
-          <div class="task-title ${task.done ? 'done' : ''}">${escHtml(task.title)}</div>
+          <div class="task-title">${escHtml(task.title)}</div>
           <div class="task-meta">
             ${pname ? `<span class="task-tag project">${escHtml(pname)}</span>` : ''}
             ${conflictBadge}
@@ -1506,48 +1509,43 @@ function renderDashboard() {
       container.appendChild(el);
     });
 
-    // Fill empty slots up to 7
-    for (let i = 0; i < MAX - visible.length; i++) {
+    // Empty slot fillers
+    for (let i = 0; i < MAX - visibleActive.length; i++) {
       const el = document.createElement('div');
       el.className = 'empty-slot';
       el.innerHTML = `<div class="empty-time">—</div><div class="empty-line"></div>`;
       container.appendChild(el);
     }
 
-    // --- Overflow logic ---
-    // If done < 4: show nothing about hidden tasks (no peek, no reveal)
-    // If done >= 4 and not unlocked: show "See more" button
-    // If unlocked: show overflow section (still hidden beyond 7 is just listed but truncated to show +info)
+    // Overflow: after 3 done, reveal hidden queue
     const queueCount = getPendingTodayTasks().length;
-    const hiddenQueue = hidden.length + queueCount; // active tasks beyond the 7 shown
-
-    if (done >= 3 && hiddenQueue > 0) {
+    const hiddenTotal = hiddenActive.length + queueCount;
+    if (doneCount >= 3 && hiddenTotal > 0) {
       const overflowDiv = document.createElement('div');
       overflowDiv.className = 'overflow-reveal';
       if (!dashOverflowUnlocked) {
         overflowDiv.innerHTML = `
-          <div class="overflow-reveal-label">You've cleared 3 tasks. Keep going.</div>
-          <div style="font-size:0.8rem;color:var(--ink-light);margin-bottom:0.6rem;">${hiddenQueue} more task${hiddenQueue!==1?'s':''} waiting — want to see them?</div>
-          <button class="overflow-expand-btn" onclick="unlockOverflow()">Show remaining tasks →</button>`;
+          <div class="overflow-reveal-label">3 done. Great momentum.</div>
+          <div style="font-size:0.8rem;color:var(--ink-light);margin-bottom:0.6rem;">+${hiddenTotal} more task${hiddenTotal!==1?'s':''} waiting for today.</div>
+          <button class="overflow-expand-btn" onclick="unlockOverflow()">Show remaining →</button>`;
       } else {
-        // Show the hidden tasks (still capped: tasks 8-14 visible in overflow list, rest stay truly hidden)
-        const overflowVisible = hidden.slice(0, 7);
-        const overflowStillHidden = hidden.length - overflowVisible.length + queueCount;
-        let html = `<div class="overflow-reveal-label">Remaining tasks for today</div>`;
+        const overflowVisible = hiddenActive.slice(0, MAX);
+        const stillHidden = hiddenActive.length - overflowVisible.length + queueCount;
+        let html = `<div class="overflow-reveal-label">More tasks for today</div>`;
         overflowVisible.forEach(t => {
           const pname = getProjectName(t.projectId);
           html += `<div class="overflow-task-item">
-            <div class="task-check ${t.done?'done':''}" onclick="toggleTask('${t.id}')"></div>
+            <div class="task-check" onclick="toggleTask('${t.id}')"></div>
             <div style="flex:1;">
-              <div style="${t.done?'text-decoration:line-through;color:var(--ink-faint);':''}">${escHtml(t.title)}</div>
-              ${pname ? `<div style="font-size:0.65rem;color:var(--accent-light);text-transform:uppercase;">${escHtml(pname)}</div>` : ''}
+              <div>${escHtml(t.title)}</div>
+              ${pname ? `<div style="font-size:0.65rem;color:var(--accent-light);text-transform:uppercase;margin-top:0.1rem;">${escHtml(pname)}</div>` : ''}
             </div>
             <div style="font-size:0.68rem;color:var(--ink-faint);">${formatTime(t.time)}</div>
             <button class="task-btn" onclick="deleteDaily('${t.id}')" style="opacity:0.5;">✕</button>
           </div>`;
         });
-        if (overflowStillHidden > 0) {
-          html += `<div style="font-size:0.72rem;color:var(--ink-faint);padding:0.5rem 0;text-align:center;">${overflowStillHidden} more task${overflowStillHidden!==1?'s':''} exist beyond today — keep going.</div>`;
+        if (stillHidden > 0) {
+          html += `<div style="font-size:0.72rem;color:var(--ink-faint);padding:0.5rem 0;text-align:center;">+${stillHidden} more — keep finishing.</div>`;
         }
         overflowDiv.innerHTML = html;
       }
@@ -1555,20 +1553,21 @@ function renderDashboard() {
     }
   }
 
-  // Done section — shown below active tasks, collapsible
-  if (td && td.filter && td.filter(t => t.done).length > 0) {
-    const doneTasks = td.filter(t => t.done);
+  // Done section — collapsible, below active
+  if (doneTasks.length > 0) {
     const doneSection = document.createElement('div');
     doneSection.className = 'done-section';
-    const doneVisible = doneTasks;
     doneSection.innerHTML = `
-      <button class="done-section-toggle" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display==='none'?'':'none'; this.textContent = this.textContent.includes('▾') ? '▸ Completed today (${doneVisible.length})' : '▾ Completed today (${doneVisible.length})'">
-        ▾ Completed today (${doneVisible.length})
-      </button>
-      <div id="done-tasks-list">
-        ${doneVisible.map(t => `
+      <button class="done-section-toggle" onclick="
+        const list = this.nextElementSibling;
+        const open = list.style.display !== 'none';
+        list.style.display = open ? 'none' : '';
+        this.textContent = open ? '▸ Completed today (${doneTasks.length})' : '▾ Completed today (${doneTasks.length})';
+      ">▾ Completed today (${doneTasks.length})</button>
+      <div>
+        ${doneTasks.map(t => `
           <div class="done-task-row">
-            <div class="task-check done" onclick="toggleTask('${t.id}')"></div>
+            <div class="task-check done" onclick="toggleTask('${t.id}')" title="Mark undone"></div>
             <div class="done-task-title">${escHtml(t.title)}</div>
             <div class="done-task-time">${formatTime(t.time)}</div>
           </div>`).join('')}
@@ -1582,7 +1581,7 @@ function renderDashboard() {
   tenBlock.className = 'ten-min-block';
   tenBlock.innerHTML = `<div class="ten-min-label">⌚ 10-Minute Tasks</div>`;
   if (tenMin.length === 0) {
-    tenBlock.innerHTML += `<div style="font-size:0.78rem;color:var(--ink-faint);">Quick tasks under 10 minutes — add from Master List</div>`;
+    tenBlock.innerHTML += `<div style="font-size:0.78rem;color:var(--ink-faint);">Quick tasks under 10 min — flag from Master List</div>`;
   } else {
     tenMin.forEach(t => {
       tenBlock.innerHTML += `
@@ -1594,15 +1593,15 @@ function renderDashboard() {
   }
   container.appendChild(tenBlock);
 
+  // Add-task section: gate on active count only
   const note = document.getElementById('task-limit-note');
-  const activeCount = td.filter(t => !t.done).length;
-  const queueCount2 = getPendingTodayTasks().length + active.slice(MAX).length;
+  const pendingCount = getPendingTodayTasks().length + activeTasks.slice(MAX).length;
   if (activeCount >= MAX) {
-    note.innerHTML = `7 active tasks. Complete one to unlock the next.${queueCount2 > 0 ? ` <span style="color:var(--accent-light);font-size:0.68rem;">+${queueCount2} queued for today.</span>` : ''}`;
+    note.innerHTML = `7 active tasks set.${pendingCount > 0 ? ` <span style="color:var(--accent-light);font-size:0.68rem;">+${pendingCount} queued.</span>` : ''}`;
     document.getElementById('add-daily-section').style.opacity = '0.5';
     document.getElementById('add-daily-section').style.pointerEvents = 'none';
   } else {
-    note.textContent = `${MAX - activeCount} slot${MAX - activeCount !== 1 ? 's' : ''} remaining.`;
+    note.textContent = `${MAX - activeCount} slot${MAX - activeCount !== 1 ? 's' : ''} available.`;
     document.getElementById('add-daily-section').style.opacity = '1';
     document.getElementById('add-daily-section').style.pointerEvents = '';
   }
@@ -1801,13 +1800,16 @@ async function toggleTask(id) {
   task.done = !task.done;
   await dbToggleDailyTask(id, task.done);
 
-  // Sync done state to project_tasks if this task belongs to a project
+  // Mirror done state to the matching project_task row
   if (task.projectId) {
     const proj = state.projects.find(p => p.id === task.projectId);
     if (proj) {
-      // Match by title + today's date (best proxy without a foreign key)
-      const projTask = proj.tasks.find(t => t.title === task.title && (t.scheduledDate === today() || !t.scheduledDate));
-      if (projTask) {
+      // Match: same title, same project, scheduled today or unscheduled, not yet synced
+      const projTask = proj.tasks.find(t =>
+        t.title === task.title &&
+        (t.scheduledDate === today() || !t.scheduledDate)
+      );
+      if (projTask && projTask.done !== task.done) {
         projTask.done = task.done;
         await dbUpdateProjectTask(projTask.id, { done: task.done });
       }
