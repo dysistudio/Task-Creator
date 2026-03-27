@@ -563,36 +563,6 @@
   .add-title { font-family: 'Inter', sans-serif; }
   .task-tag { font-family: 'Inter', sans-serif; }
 
-
-  /* === DONE HISTORY DRAWER === */
-  .done-history-wrap { margin-top: 2.5rem; border-top: 1px solid var(--rule); padding-top: 1.2rem; }
-  .done-history-btn {
-    width: 100%; display: flex; align-items: center; justify-content: space-between;
-    background: none; border: none; cursor: pointer; padding: 0 0 0.2rem;
-    font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 600;
-    letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-light);
-  }
-  .done-history-btn:hover { color: var(--accent); }
-  .done-history-btn .dh-arrow { transition: transform 0.2s; display: inline-block; font-size: 0.6rem; color: var(--ink-faint); }
-  .done-history-btn.open .dh-arrow { transform: rotate(90deg); }
-  .done-history-inner { display: none; margin-top: 1rem; }
-  .done-history-inner.open { display: block; }
-  .done-week-block { margin-bottom: 1.5rem; }
-  .done-week-label {
-    font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--ink-faint); padding-bottom: 0.4rem; margin-bottom: 0.2rem;
-    border-bottom: 1px solid var(--paper-mid);
-  }
-  .done-history-row {
-    display: flex; align-items: baseline; gap: 0.7rem;
-    padding: 0.32rem 0; border-bottom: 1px solid var(--paper-mid);
-    font-size: 0.82rem; color: var(--ink-faint);
-  }
-  .done-history-row:last-child { border-bottom: none; }
-  .done-history-row .dh-day { font-size: 0.6rem; color: var(--ink-faint); min-width: 44px; white-space: nowrap; }
-  .done-history-row .dh-proj { font-size: 0.58rem; color: var(--accent-light); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
-  .done-history-empty { font-size: 0.82rem; color: var(--ink-faint); padding: 0.5rem 0; }
-
 </style>
 </head>
 <body>
@@ -663,7 +633,7 @@
     <button class="tab active" onclick="switchTab('dashboard', this)">Dashboard</button>
     <button class="tab" onclick="switchTab('projects', this)">Projects</button>
     <button class="tab" onclick="switchTab('master', this)">Master List</button>
-    <button class="tab" onclick="switchTab('journal', this)">Notes</button>
+    <button class="tab" onclick="switchTab('journal', this)">Journal</button>
   </nav>
 
   <main class="app-body">
@@ -732,7 +702,7 @@
     <!-- JOURNAL -->
     <div class="view" id="view-journal">
       <div class="section-header">
-        <div class="section-title">Weekly Notes</div>
+        <div class="section-title">Weekly Journal</div>
         <div class="section-count" id="journal-week-label"></div>
       </div>
 
@@ -764,17 +734,6 @@
             <select class="add-select" id="journal-note-task" style="flex:1;min-width:110px;font-size:0.75rem;"></select>
             <button class="btn-add" style="padding:0.4rem 0.8rem;" onclick="addJournalNote()">+ Add</button>
           </div>
-        </div>
-      </div>
-
-      <!-- Done history drawer -->
-      <div class="done-history-wrap">
-        <button class="done-history-btn" id="done-history-btn" onclick="toggleDoneHistory()">
-          <span id="done-history-label">Completed this week</span>
-          <span class="dh-arrow">▶</span>
-        </button>
-        <div class="done-history-inner" id="done-history-inner">
-          <div id="done-history-content"></div>
         </div>
       </div>
     </div>
@@ -1085,12 +1044,6 @@ function renderJournal() {
       allTasks.map(t => `<option value="${t.id}">${escHtml(t.title.slice(0,40))}</option>`).join('');
   }
 
-  // Update done history button label count
-  const h = getDoneHistory ? getDoneHistory() : {};
-  const wkCount = (h[getWeekKey()] || []).length;
-  const lbl = document.getElementById('done-history-label');
-  if (lbl) lbl.textContent = wkCount > 0 ? 'Completed this week (' + wkCount + ')' : 'Completed this week';
-
   const notesList = document.getElementById('journal-notes-list');
   if (!notesList) return;
   if (!entry.notes || entry.notes.length === 0) {
@@ -1109,85 +1062,6 @@ function renderJournal() {
       </div>
       <button class="journal-note-del" onclick="deleteJournalNote('${n.id}')">✕</button>
     </div>`;
-  }).join('');
-}
-
-// ============================================================
-// DONE HISTORY — weekly localStorage log
-// ============================================================
-function getDoneHistory() {
-  try { return JSON.parse(localStorage.getItem('tl_done_hist_' + currentUser.id) || '{}'); }
-  catch(e) { return {}; }
-}
-function saveDoneHistory(h) {
-  localStorage.setItem('tl_done_hist_' + currentUser.id, JSON.stringify(h));
-}
-function recordDoneTasksToHistory(tasks, dateStr) {
-  if (!tasks.length) return;
-  const h = getDoneHistory();
-  // week key = Monday of that week
-  const d = new Date(dateStr + 'T00:00:00');
-  const mon = new Date(d);
-  mon.setDate(d.getDate() - ((d.getDay() + 6) % 7));
-  const wk = mon.toISOString().slice(0, 10);
-  if (!h[wk]) h[wk] = [];
-  tasks.forEach(t => h[wk].push({ title: t.title, date: dateStr, time: t.time || null, projectId: t.projectId || null }));
-  // keep 8 weeks max
-  const keys = Object.keys(h).sort().reverse();
-  keys.slice(8).forEach(k => delete h[k]);
-  saveDoneHistory(h);
-}
-
-function toggleDoneHistory() {
-  const btn = document.getElementById('done-history-btn');
-  const inner = document.getElementById('done-history-inner');
-  const open = inner.classList.contains('open');
-  inner.classList.toggle('open', !open);
-  btn.classList.toggle('open', !open);
-  if (!open) renderDoneHistory();
-}
-
-function renderDoneHistory() {
-  const container = document.getElementById('done-history-content');
-  if (!container) return;
-  const h = getDoneHistory();
-  const weeks = Object.keys(h).sort().reverse();
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-
-  // Update button label with this week's count
-  const wk = getWeekKey();
-  const thisWeekCount = (h[wk] || []).length;
-  const labelEl = document.getElementById('done-history-label');
-  if (labelEl) labelEl.textContent = thisWeekCount > 0
-    ? 'Completed this week (' + thisWeekCount + ')'
-    : 'Completed this week';
-
-  if (!weeks.length) {
-    container.innerHTML = '<div class="done-history-empty">Nothing completed yet. Finish tasks and they'll appear here by week.</div>';
-    return;
-  }
-
-  container.innerHTML = weeks.map(weekKey => {
-    const items = h[weekKey];
-    if (!items || !items.length) return '';
-    const start = new Date(weekKey + 'T00:00:00');
-    const end = new Date(start); end.setDate(start.getDate() + 6);
-    const label = months[start.getMonth()] + ' ' + start.getDate() + ' – ' + months[end.getMonth()] + ' ' + end.getDate();
-    const rows = items.map(item => {
-      const dObj = new Date(item.date + 'T00:00:00');
-      const dayLabel = days[dObj.getDay()] + ' ' + months[dObj.getMonth()] + ' ' + dObj.getDate();
-      const proj = item.projectId ? getProjectName(item.projectId) : '';
-      return '<div class="done-history-row">'
-        + '<span class="dh-day">' + dayLabel + '</span>'
-        + '<span style="flex:1;">' + escHtml(item.title) + '</span>'
-        + (proj ? '<span class="dh-proj">' + escHtml(proj) + '</span>' : '')
-        + '</div>';
-    }).join('');
-    return '<div class="done-week-block">'
-      + '<div class="done-week-label">' + label + ' · ' + items.length + ' completed</div>'
-      + rows
-      + '</div>';
   }).join('');
 }
 
@@ -1452,55 +1326,41 @@ async function checkRollover() {
   const td = today();
   const lastChecked = state.lastChecked;
 
-  // Collect every past date present in dailyTasks (handles missed days / cross-browser)
-  const pastDates = [...new Set(state.dailyTasks.filter(t => t.date < td).map(t => t.date))].sort();
+  if (lastChecked && lastChecked !== td) {
+    const unfinished = state.dailyTasks.filter(t => t.date === lastChecked && !t.done);
 
-  for (const pastDate of pastDates) {
-    const pastAll   = state.dailyTasks.filter(t => t.date === pastDate);
-    const pastDone  = pastAll.filter(t => t.done);
-    const pastUndone = pastAll.filter(t => !t.done);
-
-    // Win day?
-    if (pastAll.length > 0 && pastUndone.length === 0 && !state.winDays.includes(pastDate)) {
-      state.winDays.push(pastDate);
-      await dbAddWinDay(pastDate);
-    }
-
-    // Record done tasks to weekly history (localStorage — no await needed)
-    recordDoneTasksToHistory(pastDone, pastDate);
-
-    // Delete done past tasks from DB + state
-    for (const t of pastDone) { await dbDeleteDailyTask(t.id); }
-
-    // Move unfinished to master list then delete
-    for (const t of pastUndone) {
-      const alreadyThere = state.masterTasks.some(m => m.title === t.title);
-      if (!alreadyThere) {
-        const newId = await dbAddMasterTask({ title: t.title, projectId: t.projectId });
-        if (newId) state.masterTasks.unshift({ id: newId, title: t.title, projectId: t.projectId, isTenMin: false });
+    if (unfinished.length > 0) {
+      // Check if yesterday was a win day
+      const yesterdayAll = state.dailyTasks.filter(t => t.date === lastChecked);
+      const yesterdayDone = yesterdayAll.filter(t => t.done);
+      if (yesterdayAll.length > 0 && yesterdayDone.length === yesterdayAll.length) {
+        if (!state.winDays.includes(lastChecked)) {
+          state.winDays.push(lastChecked);
+          await dbAddWinDay(lastChecked);
+        }
       }
+
+      // Move unfinished to master list
+      for (const t of unfinished) {
+        const newId = await dbAddMasterTask({ title: t.title, projectId: t.projectId });
+        if (newId) {
+          state.masterTasks.unshift({ id: newId, title: t.title, projectId: t.projectId, isTenMin: false });
+        }
+      }
+
+      setTimeout(() => showReflection(unfinished), 800);
+    }
+    // Delete done tasks from yesterday (don't keep them)
+    const yesterdayDone = state.dailyTasks.filter(t => t.date === lastChecked && t.done);
+    for (const t of yesterdayDone) {
       await dbDeleteDailyTask(t.id);
     }
-
-    // Show reflection for lastChecked date only
-    if (pastDate === lastChecked && pastUndone.length > 0) {
-      setTimeout(() => showReflection(pastUndone), 800);
-    }
-  }
-
-  // Strip all past tasks from state
-  state.dailyTasks = state.dailyTasks.filter(t => t.date >= td);
-
-  // Remove done + past-dated project_tasks (keep project list clean)
-  for (const proj of state.projects) {
-    const toRemove = (proj.tasks || []).filter(t => t.done && t.scheduledDate && t.scheduledDate < td);
-    for (const t of toRemove) { await dbDeleteProjectTask(t.id); }
-    proj.tasks = (proj.tasks || []).filter(t => !(t.done && t.scheduledDate && t.scheduledDate < td));
+    state.dailyTasks = state.dailyTasks.filter(t => !(t.date === lastChecked && t.done));
   }
 
   state.lastChecked = td;
   localStorage.setItem(`tl_lastchecked_${currentUser.id}`, td);
-  dashOverflowUnlocked = false;
+  dashOverflowUnlocked = false; // reset each day
 }
 
 // Returns all tasks scheduled for today (from projects) not yet in daily_tasks
