@@ -1250,11 +1250,11 @@ async function loadAllData() {
   const uid_val = currentUser.id;
 
   const [dailyRes, masterRes, projRes, projTaskRes, winRes] = await Promise.all([
-    sb.from('daily_tasks').select('*').eq('user_id', uid_val).order('time'),
-    sb.from('master_tasks').select('*').eq('user_id', uid_val).order('created_at'),
-    sb.from('projects').select('*').eq('user_id', uid_val).order('created_at'),
-    sb.from('project_tasks').select('*').eq('user_id', uid_val).order('created_at'),
-    sb.from('win_days').select('date').eq('user_id', uid_val)
+    sb.from('daily_tasks').select('*').eq('user_id', uid_val).order('time').catch(e => ({ data: [], error: e })),
+    sb.from('master_tasks').select('*').eq('user_id', uid_val).order('created_at').catch(e => ({ data: [], error: e })),
+    sb.from('projects').select('*').eq('user_id', uid_val).order('created_at').catch(e => ({ data: [], error: e })),
+    sb.from('project_tasks').select('*').eq('user_id', uid_val).order('created_at').catch(e => ({ data: [], error: e })),
+    sb.from('win_days').select('date').eq('user_id', uid_val).catch(e => ({ data: [], error: e }))
   ]);
 
   // Map snake_case DB columns to camelCase for the UI
@@ -1462,61 +1462,71 @@ async function checkRollover() {
   const td = today();
   const lastChecked = state.lastChecked;
 
-  // Clean up ALL past-date tasks (handles cross-browser / missed days)
-  const pastDates = [...new Set(
-    state.dailyTasks
-      .filter(t => t.date < td)
-      .map(t => t.date)
-  )];
-
-  for (const pastDate of pastDates) {
-    const pastAll = state.dailyTasks.filter(t => t.date === pastDate);
-    const pastDone = pastAll.filter(t => t.done);
-    const pastUnfinished = pastAll.filter(t => !t.done);
-
-    // Win day check for this past date
-    if (pastAll.length > 0 && pastDone.length === pastAll.length && !state.winDays.includes(pastDate)) {
-      state.winDays.push(pastDate);
-      await dbAddWinDay(pastDate);
+  try {
+    // Collect all past-date tasks in one pass
+    const pastTasks = state.dailyTasks.filter(t => t.date < td);
+    if (pastTasks.length === 0 && lastChecked === td) {
+      // Nothing to do
+      dashOverflowUnlocked = false;
+      return;
     }
 
-    // Save done tasks to history before deleting
-    addToDoneHistory(pastDone, pastDate);
+    const pastDates = [...new Set(pastTasks.map(t => t.date))];
 
-    // Delete all done past tasks from DB
-    for (const t of pastDone) {
-      await dbDeleteDailyTask(t.id);
-    }
+    // Process each past date
+    for (const pastDate of pastDates) {
+      const pastAll = pastTasks.filter(t => t.date === pastDate);
+      const pastDone = pastAll.filter(t => t.done);
+      const pastUnfinished = pastAll.filter(t => !t.done);
 
-    // Move unfinished to master list (only if not already there)
-    for (const t of pastUnfinished) {
-      const alreadyInMaster = state.masterTasks.some(m => m.title === t.title);
-      if (!alreadyInMaster) {
-        const newId = await dbAddMasterTask({ title: t.title, projectId: t.projectId });
-        if (newId) {
-          state.masterTasks.unshift({ id: newId, title: t.title, projectId: t.projectId, isTenMin: false });
-        }
+      // Win day: all tasks that day were completed
+      if (pastAll.length > 0 && pastUnfinished.length === 0 && !state.winDays.includes(pastDate)) {
+        state.winDays.push(pastDate);
+        dbAddWinDay(pastDate).catch(e => console.warn('winday err', e));
       }
-      await dbDeleteDailyTask(t.id);
+
+      // Save done to history (localStorage — instant, no await needed)
+      addToDoneHistory(pastDone, pastDate);
+
+      // Delete done tasks from DB in parallel
+      if (pastDone.length > 0) {
+        await Promise.allSettled(pastDone.map(t => dbDeleteDailyTask(t.id)));
+      }
+
+      // Move unfinished to master list, then delete
+      for (const t of pastUnfinished) {
+        const alreadyInMaster = state.masterTasks.some(m => m.title === t.title);
+        if (!alreadyInMaster) {
+          try {
+            const newId = await dbAddMasterTask({ title: t.title, projectId: t.projectId });
+            if (newId) state.masterTasks.unshift({ id: newId, title: t.title, projectId: t.projectId, isTenMin: false });
+          } catch(e) { console.warn('master insert err', e); }
+        }
+        dbDeleteDailyTask(t.id).catch(e => console.warn('delete daily err', e));
+      }
+
+      // Show reflection for lastChecked date
+      if (pastDate === lastChecked && pastUnfinished.length > 0) {
+        setTimeout(() => showReflection(pastUnfinished), 800);
+      }
     }
 
-    // Show reflection for the most recent past date (lastChecked)
-    if (pastDate === lastChecked && pastUnfinished.length > 0) {
-      setTimeout(() => showReflection(pastUnfinished), 800);
-    }
-  }
+    // Strip all past tasks from state
+    state.dailyTasks = state.dailyTasks.filter(t => t.date >= td);
 
-  // Remove all past tasks from state
-  state.dailyTasks = state.dailyTasks.filter(t => t.date >= td);
-
-  // Also clean done project_tasks that are past-dated — remove from project view
-  // (they're preserved in done history; no need to show them in projects anymore)
-  for (const proj of state.projects) {
-    const donePastTasks = (proj.tasks || []).filter(t => t.done && t.scheduledDate && t.scheduledDate < td);
-    for (const t of donePastTasks) {
-      await dbDeleteProjectTask(t.id);
+    // Clean done+past project_tasks in parallel
+    const projDeletePromises = [];
+    for (const proj of state.projects) {
+      const toDelete = (proj.tasks || []).filter(t => t.done && t.scheduledDate && t.scheduledDate < td);
+      toDelete.forEach(t => projDeletePromises.push(dbDeleteProjectTask(t.id).catch(() => {})));
+      proj.tasks = (proj.tasks || []).filter(t => !(t.done && t.scheduledDate && t.scheduledDate < td));
     }
-    proj.tasks = (proj.tasks || []).filter(t => !(t.done && t.scheduledDate && t.scheduledDate < td));
+    if (projDeletePromises.length > 0) await Promise.allSettled(projDeletePromises);
+
+  } catch(err) {
+    console.error('checkRollover error:', err);
+    // Don't block boot — just clear state minimally
+    state.dailyTasks = state.dailyTasks.filter(t => t.date >= td);
   }
 
   state.lastChecked = td;
@@ -1542,16 +1552,20 @@ function getPendingTodayTasks() {
 async function syncProjectTasksToday() {
   // Push ALL today-scheduled project tasks to daily_tasks (no cap).
   // The dashboard display layer controls what's visible (7 active max).
-  const pending = getPendingTodayTasks();
-  for (const { task, proj } of pending) {
-    const newId = await dbAddDailyTask({
-      title: task.title, time: task.scheduledTime || '09:00',
-      projectId: proj.id, date: today()
-    });
-    if (newId) {
-      state.dailyTasks.push({ id: newId, title: task.title, time: task.scheduledTime || '09:00', projectId: proj.id, done: false, date: today() });
+  try {
+    const pending = getPendingTodayTasks();
+    for (const { task, proj } of pending) {
+      try {
+        const newId = await dbAddDailyTask({
+          title: task.title, time: task.scheduledTime || '09:00',
+          projectId: proj.id, date: today()
+        });
+        if (newId) {
+          state.dailyTasks.push({ id: newId, title: task.title, time: task.scheduledTime || '09:00', projectId: proj.id, done: false, date: today() });
+        }
+      } catch(e) { console.warn('syncProjectTask item err', e); }
     }
-  }
+  } catch(e) { console.error('syncProjectTasksToday err', e); }
 }
 
 // fillFromQueue is now a no-op — all tasks are synced at boot.
@@ -2445,11 +2459,16 @@ async function startApp() {
   showLoading(true);
   document.getElementById('login-screen').style.display = 'none';
 
-  await loadAllData();
-  applyProjectOrder();
-  await checkRollover();
-  await syncRecurringTasksToday();
-  await syncProjectTasksToday();
+  try {
+    await loadAllData();
+    applyProjectOrder();
+    await checkRollover();
+    await syncRecurringTasksToday();
+    await syncProjectTasksToday();
+  } catch(err) {
+    console.error('startApp error:', err);
+    // Don't hang — continue even if something fails
+  }
 
   showLoading(false);
   document.getElementById('app').style.display = 'flex';
