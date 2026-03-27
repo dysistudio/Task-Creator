@@ -8,7 +8,6 @@
 <meta name="apple-mobile-web-app-title" content="Task Leader">
 <meta name="theme-color" content="#faf9ff">
 <title>Task Leader</title>
-<link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
@@ -64,9 +63,7 @@
     letter-spacing: 0.35em;
     text-transform: uppercase;
   }
-  .loading-dots {
-    display: flex; gap: 6px;
-  }
+  .loading-dots { display: flex; gap: 6px; }
   .loading-dots span {
     width: 5px; height: 5px;
     background: var(--ink-faint);
@@ -78,6 +75,15 @@
   @keyframes dotpulse {
     0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
     40% { opacity: 1; transform: scale(1); }
+  }
+  .loading-error {
+    font-size: 0.75rem; color: var(--red); text-align: center;
+    max-width: 280px; line-height: 1.5; display: none;
+  }
+  .loading-retry {
+    font-size: 0.72rem; color: var(--accent); cursor: pointer;
+    text-decoration: underline; background: none; border: none;
+    font-family: 'Inter', sans-serif; display: none;
   }
 
   /* === LOGIN === */
@@ -98,19 +104,19 @@
     border-radius: 18px;
     box-shadow: 0 8px 40px rgba(124,111,160,0.12), 0 0 0 1px var(--rule);
   }
-
   .login-card::before {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0;
     height: 4px;
     background: var(--accent);
+    border-radius: 18px 18px 0 0;
   }
 
   .login-logo { font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--ink); margin-bottom: 0.2rem; letter-spacing: 0.15em; text-transform: uppercase; }
   .login-sub { font-size: 0.72rem; font-weight: 400; color: var(--ink-faint); letter-spacing: 0.08em; margin-bottom: 2rem; }
 
-  .field-label { display: block; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-light); margin-bottom: 0.4rem; }
+  .field-label { display: block; font-family: 'Inter', sans-serif; font-size: 0.67rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-light); margin-bottom: 0.4rem; }
 
   .field-input {
     width: 100%;
@@ -118,8 +124,8 @@
     border: none;
     border-bottom: 1px solid var(--rule);
     padding: 0.5rem 0;
-    font-family: 'Courier Prime', monospace;
-    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
     color: var(--ink);
     outline: none;
     transition: border-color 0.2s;
@@ -148,7 +154,6 @@
 
   .login-toggle { text-align: center; margin-top: 1.5rem; font-size: 0.78rem; color: var(--ink-light); }
   .login-toggle a { color: var(--accent); cursor: pointer; text-decoration: underline; }
-
   .login-error { color: var(--red); font-size: 0.78rem; margin-top: -1rem; margin-bottom: 1rem; display: none; }
 
   /* === APP === */
@@ -167,7 +172,6 @@
     top: 0;
     z-index: 100;
   }
-
   .app-logo { font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 600; color: var(--ink); letter-spacing: 0.12em; text-transform: uppercase; }
   .app-date { font-size: 0.72rem; color: var(--ink-faint); letter-spacing: 0.1em; text-transform: uppercase; }
   .header-right { display: flex; align-items: center; gap: 1rem; }
@@ -176,7 +180,6 @@
   .btn-icon:hover { color: var(--accent); }
 
   .tabs { display: flex; border-bottom: 1px solid var(--rule); background: rgba(250,249,255,0.9); padding: 0 1.2rem; gap: 0.2rem; }
-
   .tab {
     font-family: 'Inter', sans-serif;
     font-size: 0.7rem;
@@ -225,7 +228,7 @@
   .time-block.drag-over { border-top: 2px solid var(--accent); }
   .time-block.dragging { opacity: 0.4; }
 
-  .time-label { font-size: 0.7rem; color: var(--ink-faint); letter-spacing: 0.08em; min-width: 52px; padding-top: 2px; user-select: none; }
+  .time-label { font-family: 'Inter', sans-serif; font-size: 0.67rem; color: var(--ink-faint); letter-spacing: 0.04em; min-width: 52px; padding-top: 2px; user-select: none; }
 
   .task-check {
     width: 18px; height: 18px;
@@ -245,7 +248,7 @@
   .task-title { font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 400; color: var(--ink); line-height: 1.45; transition: color 0.2s; word-break: break-word; }
   .task-title.done { color: var(--ink-faint); text-decoration: line-through; }
   .task-meta { display: flex; gap: 0.8rem; margin-top: 0.25rem; flex-wrap: wrap; }
-  .task-tag { font-size: 0.68rem; letter-spacing: 0.1em; color: var(--ink-faint); text-transform: uppercase; }
+  .task-tag { font-family: 'Inter', sans-serif; font-size: 0.68rem; letter-spacing: 0.1em; color: var(--ink-faint); text-transform: uppercase; }
   .task-tag.project { color: var(--accent-light); }
 
   .task-actions { display: flex; gap: 0.5rem; opacity: 0; transition: opacity 0.15s; }
@@ -262,7 +265,7 @@
   .empty-line { flex: 1; height: 1px; background: var(--paper-mid); }
 
   .add-section { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); }
-  .add-title { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 1rem; }
+  .add-title { font-family: 'Inter', sans-serif; font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 1rem; }
 
   .add-form { display: flex; flex-direction: column; gap: 0.8rem; }
 
@@ -302,8 +305,8 @@
   .master-item { display: flex; align-items: flex-start; gap: 0.8rem; padding: 0.8rem 0; border-bottom: 1px solid var(--paper-mid); }
   .master-item-bullet { color: var(--ink-faint); font-size: 0.8rem; padding-top: 2px; user-select: none; }
   .master-item-content { flex: 1; min-width: 0; }
-  .master-item-title { font-size: 0.9rem; color: var(--ink); word-break: break-word; line-height: 1.4; }
-  .master-item-meta { font-size: 0.68rem; color: var(--ink-faint); margin-top: 0.15rem; letter-spacing: 0.05em; }
+  .master-item-title { font-family: 'Inter', sans-serif; font-size: 0.88rem; color: var(--ink); word-break: break-word; line-height: 1.4; }
+  .master-item-meta { font-family: 'Inter', sans-serif; font-size: 0.68rem; color: var(--ink-faint); margin-top: 0.15rem; letter-spacing: 0.05em; }
   .master-item-actions { display: flex; gap: 0.4rem; opacity: 0; transition: opacity 0.15s; flex-shrink: 0; }
   .master-item:hover .master-item-actions { opacity: 1; }
 
@@ -317,7 +320,16 @@
   .master-btn.danger:hover { border-color: var(--red); color: var(--red); background: rgba(139,58,90,0.05); }
 
   /* === PROJECTS === */
-  /* project-card now defined below with drag support */
+  .project-card {
+    border: 1px solid var(--rule); margin-bottom: 1.2rem; background: var(--paper);
+    cursor: grab; user-select: none; border-radius: 12px; overflow: hidden;
+    transition: box-shadow 0.18s, opacity 0.15s;
+  }
+  .project-card:hover { box-shadow: 0 4px 20px rgba(124,111,160,0.1); }
+  .project-card:active { cursor: grabbing; }
+  .project-card.proj-dragging { opacity: 0.4; box-shadow: none; }
+  .project-card.proj-drag-over { border-top: 2px solid var(--accent); }
+
   .project-header { padding: 1rem 1.2rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--rule); cursor: pointer; user-select: none; }
   .project-name { font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 600; color: var(--ink); letter-spacing: 0.04em; }
   .project-progress-text { font-size: 0.7rem; color: var(--ink-faint); letter-spacing: 0.08em; }
@@ -397,8 +409,9 @@
     position: fixed; bottom: 2rem; left: 50%;
     transform: translateX(-50%) translateY(4rem);
     background: var(--ink); color: var(--paper);
-    padding: 0.7rem 1.5rem; font-family: 'Courier Prime', monospace;
+    padding: 0.7rem 1.5rem; font-family: 'Inter', sans-serif;
     font-size: 0.8rem; letter-spacing: 0.08em; z-index: 1000;
+    border-radius: 10px;
     transition: transform 0.3s ease; pointer-events: none; white-space: nowrap;
   }
   #toast.show { transform: translateX(-50%) translateY(0); }
@@ -422,37 +435,34 @@
 
   .hidden { display: none !important; }
 
-  /* === JOURNAL === */
-  .journal-pinned-note {
+  /* === NOTES TAB === */
+  .notes-pinned-note {
     display: flex; align-items: flex-start; gap: 0.6rem;
     background: var(--paper-dark); border: 1px solid var(--rule);
     border-left: 3px solid var(--accent); padding: 0.8rem 1rem;
     font-size: 0.78rem; color: var(--ink-light); line-height: 1.6;
     margin-bottom: 2rem; border-radius: 2px;
   }
-  .journal-pin-icon { flex-shrink: 0; font-size: 0.75rem; margin-top: 0.1rem; }
-  .journal-section { margin-bottom: 2rem; }
-  .journal-section-label {
-    font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase;
-    color: var(--ink-faint); margin-bottom: 0.6rem;
-  }
-  .journal-textarea {
+  .notes-pin-icon { flex-shrink: 0; font-size: 0.75rem; margin-top: 0.1rem; }
+  .notes-section { margin-bottom: 2rem; }
+  .notes-section-label { font-family: 'Inter', sans-serif; font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 0.6rem; }
+  .notes-textarea {
     width: 100%; background: transparent; border: none;
     border-bottom: 1px solid var(--rule); padding: 0.5rem 0;
-    font-family: 'Courier Prime', monospace; font-size: 0.9rem;
+    font-family: 'Inter', sans-serif; font-size: 0.9rem;
     color: var(--ink); outline: none; resize: none; line-height: 1.7;
     transition: border-color 0.2s;
   }
-  .journal-textarea:focus { border-bottom-color: var(--accent); }
-  .journal-textarea::placeholder { color: var(--ink-faint); }
-  .journal-note-item {
+  .notes-textarea:focus { border-bottom-color: var(--accent); }
+  .notes-textarea::placeholder { color: var(--ink-faint); }
+  .notes-note-item {
     display: flex; align-items: flex-start; gap: 0.7rem;
     padding: 0.6rem 0; border-bottom: 1px solid var(--paper-mid);
   }
-  .journal-note-text { flex: 1; font-size: 0.85rem; color: var(--ink); line-height: 1.5; }
-  .journal-note-tag { font-size: 0.65rem; color: var(--accent-light); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.15rem; }
-  .journal-note-del { background: none; border: none; cursor: pointer; color: var(--ink-faint); font-size: 0.75rem; padding: 0.1rem 0.3rem; transition: color 0.2s; flex-shrink: 0; }
-  .journal-note-del:hover { color: var(--red); }
+  .notes-note-text { flex: 1; font-size: 0.85rem; color: var(--ink); line-height: 1.5; }
+  .notes-note-tag { font-size: 0.65rem; color: var(--accent-light); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.15rem; }
+  .notes-note-del { background: none; border: none; cursor: pointer; color: var(--ink-faint); font-size: 0.75rem; padding: 0.1rem 0.3rem; transition: color 0.2s; flex-shrink: 0; }
+  .notes-note-del:hover { color: var(--red); }
 
   /* === CELEBRATION / CONFETTI === */
   @keyframes confetti-fall {
@@ -470,31 +480,15 @@
     pointer-events: none; z-index: 9998;
     animation: confetti-fall 0.9s ease-out forwards;
   }
-  .celebrate-ring {
-    animation: task-celebrate 0.45s ease;
-  }
+  .celebrate-ring { animation: task-celebrate 0.45s ease; }
 
-  /* === DRAGGABLE PROJECT CARDS === */
-  .project-card {
-    border: 1px solid var(--rule); margin-bottom: 1.2rem; background: var(--paper);
-    cursor: grab; user-select: none; border-radius: 12px; overflow: hidden;
-    transition: box-shadow 0.18s, opacity 0.15s;
-  }
-  .project-card:hover { box-shadow: 0 4px 20px rgba(124,111,160,0.1); }
-  .project-card:active { cursor: grabbing; }
-  .project-card.proj-dragging { opacity: 0.4; box-shadow: none; }
-  .project-card.proj-drag-over { border-top: 2px solid var(--accent); }
-
-  /* === DASHBOARD OVERFLOW TASKS === */
+  /* === OVERFLOW TASKS === */
   .overflow-reveal {
     margin-top: 1.2rem; padding: 0.8rem 1rem;
     border: 1px dashed var(--rule); border-radius: 2px;
     background: var(--paper-dark);
   }
-  .overflow-reveal-label {
-    font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--ink-faint); margin-bottom: 0.6rem;
-  }
+  .overflow-reveal-label { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 0.6rem; }
   .overflow-task-item {
     display: flex; align-items: center; gap: 0.7rem;
     padding: 0.4rem 0; border-bottom: 1px solid var(--paper-mid);
@@ -510,10 +504,10 @@
   }
   .overflow-expand-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-  /* === TIME CONFLICT BADGE === */
+  /* === TIME CONFLICT === */
   .time-conflict { background: rgba(168,150,204,0.08); border-left: 3px solid var(--accent-light); }
 
-  /* === DONE SECTION === */
+  /* === DONE SECTION (today, collapsible) === */
   .done-section { margin-top: 1.5rem; border-top: 1px solid var(--rule); padding-top: 1rem; }
   .done-section-toggle {
     display: flex; align-items: center; gap: 0.5rem; cursor: pointer;
@@ -536,35 +530,7 @@
     padding: 0.1rem 0.4rem; border-radius: 4px; white-space: nowrap;
   }
 
-  /* === FIELD LABEL Inter === */
-  .field-label { display: block; font-family: 'Inter', sans-serif; font-size: 0.67rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-light); margin-bottom: 0.4rem; }
-
-  /* === FIELD INPUT Inter === */
-  .field-input {
-    width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--rule);
-    padding: 0.5rem 0; font-family: 'Inter', sans-serif; font-size: 0.95rem;
-    color: var(--ink); outline: none; transition: border-color 0.18s; margin-bottom: 1.5rem;
-  }
-  .field-input:focus { border-bottom-color: var(--accent); }
-
-  /* journal Inter */
-  .journal-textarea { font-family: 'Inter', sans-serif; }
-  .journal-section-label { font-family: 'Inter', sans-serif; }
-
-  /* toast Inter */
-  #toast { font-family: 'Inter', sans-serif; border-radius: 10px; }
-
-  /* time-label Inter */
-  .time-label { font-family: 'Inter', sans-serif; font-size: 0.67rem; color: var(--ink-faint); letter-spacing: 0.04em; min-width: 52px; padding-top: 2px; user-select: none; }
-
-  /* master-item-title Inter */
-  .master-item-title { font-family: 'Inter', sans-serif; font-size: 0.88rem; }
-  .master-item-meta { font-family: 'Inter', sans-serif; }
-  .add-title { font-family: 'Inter', sans-serif; }
-  .task-tag { font-family: 'Inter', sans-serif; }
-
-
-  /* === DONE HISTORY DRAWER === */
+  /* === DONE HISTORY DRAWER (in Notes tab) === */
   .done-history-wrap { margin-top: 2.5rem; border-top: 1px solid var(--rule); padding-top: 1.2rem; }
   .done-history-btn {
     width: 100%; display: flex; align-items: center; justify-content: space-between;
@@ -582,7 +548,14 @@
     font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
     color: var(--ink-faint); padding-bottom: 0.4rem; margin-bottom: 0.2rem;
     border-bottom: 1px solid var(--paper-mid);
+    display: flex; align-items: center; justify-content: space-between;
   }
+  .done-week-clear {
+    background: none; border: none; cursor: pointer; font-family: 'Inter', sans-serif;
+    font-size: 0.58rem; color: var(--ink-faint); letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 0; transition: color 0.2s;
+  }
+  .done-week-clear:hover { color: var(--red); }
   .done-history-row {
     display: flex; align-items: baseline; gap: 0.7rem;
     padding: 0.32rem 0; border-bottom: 1px solid var(--paper-mid);
@@ -592,7 +565,6 @@
   .done-history-row .dh-day { font-size: 0.6rem; color: var(--ink-faint); min-width: 44px; white-space: nowrap; }
   .done-history-row .dh-proj { font-size: 0.58rem; color: var(--accent-light); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
   .done-history-empty { font-size: 0.82rem; color: var(--ink-faint); padding: 0.5rem 0; }
-
 </style>
 </head>
 <body>
@@ -601,6 +573,8 @@
 <div id="loading-screen">
   <div class="loading-logo">Task Leader</div>
   <div class="loading-dots"><span></span><span></span><span></span></div>
+  <div class="loading-error" id="loading-error"></div>
+  <button class="loading-retry" id="loading-retry" onclick="retryBoot()">Retry</button>
 </div>
 
 <!-- LOGIN -->
@@ -612,36 +586,23 @@
     <div id="login-form">
       <label class="field-label">Email</label>
       <input type="email" class="field-input" id="login-email" autocomplete="email" placeholder="_">
-
       <label class="field-label">Password</label>
       <input type="password" class="field-input" id="login-pass" autocomplete="current-password" placeholder="_">
-
       <div class="login-error" id="login-error">Incorrect credentials. Try again.</div>
-
       <button class="btn-primary" id="login-btn" onclick="doLogin()">Enter</button>
-
-      <div class="login-toggle">
-        No account? <a onclick="showRegister()">Register here</a>
-      </div>
+      <div class="login-toggle">No account? <a onclick="showRegister()">Register here</a></div>
     </div>
 
     <div id="register-form" class="hidden">
       <label class="field-label">Email</label>
       <input type="email" class="field-input" id="reg-email" placeholder="_">
-
       <label class="field-label">Choose Password</label>
       <input type="password" class="field-input" id="reg-pass" placeholder="_">
-
       <label class="field-label">Confirm Password</label>
       <input type="password" class="field-input" id="reg-pass2" placeholder="_">
-
       <div class="login-error" id="reg-error">Passwords do not match.</div>
-
       <button class="btn-primary" id="register-btn" onclick="doRegister()">Create Account</button>
-
-      <div class="login-toggle">
-        Have an account? <a onclick="showLogin()">Sign in</a>
-      </div>
+      <div class="login-toggle">Have an account? <a onclick="showLogin()">Sign in</a></div>
     </div>
   </div>
 </div>
@@ -663,7 +624,7 @@
     <button class="tab active" onclick="switchTab('dashboard', this)">Dashboard</button>
     <button class="tab" onclick="switchTab('projects', this)">Projects</button>
     <button class="tab" onclick="switchTab('master', this)">Master List</button>
-    <button class="tab" onclick="switchTab('journal', this)">Notes</button>
+    <button class="tab" onclick="switchTab('notes', this)">Notes</button>
   </nav>
 
   <main class="app-body">
@@ -674,9 +635,7 @@
         <div class="day-progress" id="day-progress"></div>
         <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
       </div>
-
       <div id="dashboard-tasks"></div>
-
       <div class="add-section" id="add-daily-section">
         <div class="add-title">Schedule a task for today</div>
         <div class="add-form">
@@ -697,14 +656,12 @@
         <div class="section-title">Master List</div>
         <div class="section-count" id="master-count"></div>
       </div>
-
       <div class="add-form" style="margin-bottom:2rem;">
         <input type="text" class="add-input" id="master-input" placeholder="Capture a thought, task, idea..." maxlength="120">
         <div class="add-row">
           <button class="btn-add" onclick="addMasterTask()">+ Capture</button>
         </div>
       </div>
-
       <div id="master-list"></div>
     </div>
 
@@ -714,7 +671,6 @@
         <div class="section-title">Projects</div>
         <button class="btn-add" onclick="showNewProjectForm()" style="font-size:0.72rem; padding:0.4rem 0.8rem;">+ New</button>
       </div>
-
       <div id="new-project-form" class="new-project-form hidden">
         <div class="add-form">
           <input type="text" class="add-input" id="project-name-input" placeholder="Project name..." maxlength="60">
@@ -725,49 +681,47 @@
           </div>
         </div>
       </div>
-
       <div id="projects-list"></div>
     </div>
 
-    <!-- JOURNAL -->
-    <div class="view" id="view-journal">
+    <!-- NOTES (renamed from Journal) -->
+    <div class="view" id="view-notes">
       <div class="section-header">
         <div class="section-title">Weekly Notes</div>
-        <div class="section-count" id="journal-week-label"></div>
+        <div class="section-count" id="notes-week-label"></div>
       </div>
 
-      <!-- Pinned reminder -->
-      <div class="journal-pinned-note">
-        <span class="journal-pin-icon">📌</span>
+      <div class="notes-pinned-note">
+        <span class="notes-pin-icon">📌</span>
         <span>Keep this space clean. Only add what you truly can't afford to forget right now. Clear it regularly — this is a short-term holding space, not an archive.</span>
       </div>
 
       <!-- Week Theme -->
-      <div class="journal-section">
-        <div class="journal-section-label">Theme for this week</div>
-        <textarea class="journal-textarea" id="journal-theme" placeholder="What's the one word or phrase that defines this week?..." rows="2" oninput="saveJournal()"></textarea>
+      <div class="notes-section">
+        <div class="notes-section-label">Theme for this week</div>
+        <textarea class="notes-textarea" id="notes-theme" placeholder="What's the one word or phrase that defines this week?..." rows="2" oninput="saveNotes()"></textarea>
       </div>
 
       <!-- Working On -->
-      <div class="journal-section">
-        <div class="journal-section-label">Something I'm working on / figuring out</div>
-        <textarea class="journal-textarea" id="journal-working" placeholder="A problem, idea, or thing on your mind..." rows="3" oninput="saveJournal()"></textarea>
+      <div class="notes-section">
+        <div class="notes-section-label">Something I'm working on / figuring out</div>
+        <textarea class="notes-textarea" id="notes-working" placeholder="A problem, idea, or thing on your mind..." rows="3" oninput="saveNotes()"></textarea>
       </div>
 
       <!-- Don't Forget -->
-      <div class="journal-section">
-        <div class="journal-section-label">Don't forget</div>
-        <div id="journal-notes-list"></div>
+      <div class="notes-section">
+        <div class="notes-section-label">Don't forget</div>
+        <div id="notes-list"></div>
         <div class="add-form" style="margin-top:0.8rem;">
           <div style="display:flex;gap:0.6rem;align-items:center;">
-            <input type="text" class="add-input" id="journal-note-input" placeholder="Something short-term to remember..." maxlength="160" style="flex:1;">
-            <select class="add-select" id="journal-note-task" style="flex:1;min-width:110px;font-size:0.75rem;"></select>
-            <button class="btn-add" style="padding:0.4rem 0.8rem;" onclick="addJournalNote()">+ Add</button>
+            <input type="text" class="add-input" id="notes-note-input" placeholder="Something short-term to remember..." maxlength="160" style="flex:1;">
+            <select class="add-select" id="notes-note-task" style="flex:1;min-width:110px;font-size:0.75rem;"></select>
+            <button class="btn-add" style="padding:0.4rem 0.8rem;" onclick="addNote()">+ Add</button>
           </div>
         </div>
       </div>
 
-      <!-- Done history drawer -->
+      <!-- Done history drawer — weekly, clearable -->
       <div class="done-history-wrap">
         <button class="done-history-btn" id="done-history-btn" onclick="toggleDoneHistory()">
           <span id="done-history-label">Completed this week</span>
@@ -923,8 +877,6 @@
   </div>
 </div>
 
-<div id="toast"></div>
-
 <!-- RENAME PROJECT MODAL -->
 <div class="modal-overlay" id="rename-project-modal">
   <div class="modal">
@@ -940,12 +892,14 @@
   </div>
 </div>
 
+<div id="toast"></div>
+
 <!-- Supabase SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 // ============================================================
-// CONFIGURATION — REPLACE THESE TWO VALUES
+// CONFIGURATION
 // ============================================================
 const SUPABASE_URL = 'https://fwabipdihkwixbohzlli.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ3YWJpcGRpaGt3aXhib2h6bGxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzMzQ3NjYsImV4cCI6MjA4OTkxMDc2Nn0.insZKvNRGopqBAEqXiCyDVswKaUcmn-6q5EzyX3sZ7M';
@@ -953,19 +907,24 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 // ============================================================
 // SUPABASE CLIENT
 // ============================================================
-const { createClient } = supabase;
-const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let sb;
+try {
+  const { createClient } = supabase;
+  sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+} catch(e) {
+  showBootError('Failed to initialize. Please refresh.');
+}
 
 // ============================================================
-// IN-MEMORY STATE (loaded from Supabase on login)
+// STATE
 // ============================================================
 let state = {
   dailyTasks: [],
   masterTasks: [],
-  projects: [],     // each project has .tasks[] loaded separately
+  projects: [],
   winDays: [],
   lastChecked: null,
-  journal: {}       // keyed by week string, holds {theme, working, notes:[]}
+  notes: {}
 };
 
 let currentUser = null;
@@ -1020,7 +979,7 @@ function escHtml(s) {
 
 function getWeekKey() {
   const d = new Date();
-  const day = d.getDay(); // 0=Sun
+  const day = d.getDay();
   const mon = new Date(d);
   mon.setDate(d.getDate() - ((day + 6) % 7));
   return mon.toISOString().slice(0, 10);
@@ -1034,48 +993,63 @@ function getWeekLabel() {
   return `Week of ${months[start.getMonth()]} ${start.getDate()} – ${months[end.getMonth()]} ${end.getDate()}`;
 }
 
-function loadJournal() {
-  const key = `tl_journal_${currentUser.id}`;
-  try { state.journal = JSON.parse(localStorage.getItem(key) || '{}'); } catch(e) { state.journal = {}; }
+// ============================================================
+// NOTES (renamed from Journal)
+// ============================================================
+function loadNotes() {
+  const key = `tl_notes_${currentUser.id}`;
+  // also try legacy journal key for migration
+  try {
+    let data = localStorage.getItem(key);
+    if (!data) {
+      const legacyData = localStorage.getItem(`tl_journal_${currentUser.id}`);
+      if (legacyData) {
+        data = legacyData;
+        localStorage.setItem(key, data); // migrate
+      }
+    }
+    state.notes = JSON.parse(data || '{}');
+  } catch(e) { state.notes = {}; }
 }
 
-function saveJournal() {
+function saveNotes() {
   const wk = getWeekKey();
-  if (!state.journal[wk]) state.journal[wk] = { theme: '', working: '', notes: [] };
-  state.journal[wk].theme = document.getElementById('journal-theme').value;
-  state.journal[wk].working = document.getElementById('journal-working').value;
-  localStorage.setItem(`tl_journal_${currentUser.id}`, JSON.stringify(state.journal));
+  if (!state.notes[wk]) state.notes[wk] = { theme: '', working: '', noteItems: [] };
+  state.notes[wk].theme = document.getElementById('notes-theme').value;
+  state.notes[wk].working = document.getElementById('notes-working').value;
+  localStorage.setItem(`tl_notes_${currentUser.id}`, JSON.stringify(state.notes));
 }
 
-function addJournalNote() {
-  const text = document.getElementById('journal-note-input').value.trim();
+function addNote() {
+  const text = document.getElementById('notes-note-input').value.trim();
   if (!text) return;
   const wk = getWeekKey();
-  if (!state.journal[wk]) state.journal[wk] = { theme: '', working: '', notes: [] };
-  const taskId = document.getElementById('journal-note-task').value;
-  state.journal[wk].notes.push({ id: uid(), text, taskId: taskId || null, ts: Date.now() });
-  document.getElementById('journal-note-input').value = '';
-  localStorage.setItem(`tl_journal_${currentUser.id}`, JSON.stringify(state.journal));
-  renderJournal();
+  if (!state.notes[wk]) state.notes[wk] = { theme: '', working: '', noteItems: [] };
+  const taskId = document.getElementById('notes-note-task').value;
+  if (!state.notes[wk].noteItems) state.notes[wk].noteItems = [];
+  state.notes[wk].noteItems.push({ id: uid(), text, taskId: taskId || null, ts: Date.now() });
+  document.getElementById('notes-note-input').value = '';
+  localStorage.setItem(`tl_notes_${currentUser.id}`, JSON.stringify(state.notes));
+  renderNotes();
 }
 
-function deleteJournalNote(noteId) {
+function deleteNote(noteId) {
   const wk = getWeekKey();
-  if (!state.journal[wk]) return;
-  state.journal[wk].notes = state.journal[wk].notes.filter(n => n.id !== noteId);
-  localStorage.setItem(`tl_journal_${currentUser.id}`, JSON.stringify(state.journal));
-  renderJournal();
+  if (!state.notes[wk]) return;
+  state.notes[wk].noteItems = (state.notes[wk].noteItems || []).filter(n => n.id !== noteId);
+  localStorage.setItem(`tl_notes_${currentUser.id}`, JSON.stringify(state.notes));
+  renderNotes();
 }
 
-function renderJournal() {
+function renderNotes() {
   const wk = getWeekKey();
-  const entry = state.journal[wk] || { theme: '', working: '', notes: [] };
-  document.getElementById('journal-week-label').textContent = getWeekLabel();
-  document.getElementById('journal-theme').value = entry.theme || '';
-  document.getElementById('journal-working').value = entry.working || '';
+  const entry = state.notes[wk] || { theme: '', working: '', noteItems: [] };
+  document.getElementById('notes-week-label').textContent = getWeekLabel();
+  document.getElementById('notes-theme').value = entry.theme || '';
+  document.getElementById('notes-working').value = entry.working || '';
 
-  // populate task dropdown for journal notes
-  const sel = document.getElementById('journal-note-task');
+  // Task dropdown
+  const sel = document.getElementById('notes-note-task');
   if (sel) {
     const allTasks = [
       ...state.dailyTasks.filter(t => t.date === today() && !t.done),
@@ -1085,47 +1059,49 @@ function renderJournal() {
       allTasks.map(t => `<option value="${t.id}">${escHtml(t.title.slice(0,40))}</option>`).join('');
   }
 
-  // Update done history button label count
-  const h = getDoneHistory ? getDoneHistory() : {};
+  // Update done history button label
+  const h = getDoneHistory();
   const wkCount = (h[getWeekKey()] || []).length;
   const lbl = document.getElementById('done-history-label');
-  if (lbl) lbl.textContent = wkCount > 0 ? 'Completed this week (' + wkCount + ')' : 'Completed this week';
+  if (lbl) lbl.textContent = wkCount > 0 ? `Completed this week (${wkCount})` : 'Completed this week';
 
-  const notesList = document.getElementById('journal-notes-list');
+  const notesList = document.getElementById('notes-list');
   if (!notesList) return;
-  if (!entry.notes || entry.notes.length === 0) {
+  const items = entry.noteItems || [];
+  if (items.length === 0) {
     notesList.innerHTML = `<div style="color:var(--ink-faint);font-size:0.82rem;padding:0.5rem 0;">Nothing here yet.</div>`;
     return;
   }
-  notesList.innerHTML = entry.notes.map(n => {
+  notesList.innerHTML = items.map(n => {
     const taskLabel = n.taskId ? (() => {
       const t = [...state.dailyTasks, ...state.masterTasks].find(t => t.id === n.taskId);
-      return t ? `<div class="journal-note-tag">↳ ${escHtml(t.title.slice(0,40))}</div>` : '';
+      return t ? `<div class="notes-note-tag">↳ ${escHtml(t.title.slice(0,40))}</div>` : '';
     })() : '';
-    return `<div class="journal-note-item">
+    return `<div class="notes-note-item">
       <div style="flex:1;">
-        <div class="journal-note-text">${escHtml(n.text)}</div>
+        <div class="notes-note-text">${escHtml(n.text)}</div>
         ${taskLabel}
       </div>
-      <button class="journal-note-del" onclick="deleteJournalNote('${n.id}')">✕</button>
+      <button class="notes-note-del" onclick="deleteNote('${n.id}')">✕</button>
     </div>`;
   }).join('');
 }
 
 // ============================================================
-// DONE HISTORY — weekly localStorage log
+// DONE HISTORY
 // ============================================================
 function getDoneHistory() {
   try { return JSON.parse(localStorage.getItem('tl_done_hist_' + currentUser.id) || '{}'); }
   catch(e) { return {}; }
 }
+
 function saveDoneHistory(h) {
   localStorage.setItem('tl_done_hist_' + currentUser.id, JSON.stringify(h));
 }
+
 function recordDoneTasksToHistory(tasks, dateStr) {
   if (!tasks.length) return;
   const h = getDoneHistory();
-  // week key = Monday of that week
   const d = new Date(dateStr + 'T00:00:00');
   const mon = new Date(d);
   mon.setDate(d.getDate() - ((d.getDay() + 6) % 7));
@@ -1136,6 +1112,13 @@ function recordDoneTasksToHistory(tasks, dateStr) {
   const keys = Object.keys(h).sort().reverse();
   keys.slice(8).forEach(k => delete h[k]);
   saveDoneHistory(h);
+}
+
+function clearWeekHistory(weekKey) {
+  const h = getDoneHistory();
+  delete h[weekKey];
+  saveDoneHistory(h);
+  renderDoneHistory();
 }
 
 function toggleDoneHistory() {
@@ -1155,16 +1138,15 @@ function renderDoneHistory() {
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
-  // Update button label with this week's count
   const wk = getWeekKey();
   const thisWeekCount = (h[wk] || []).length;
   const labelEl = document.getElementById('done-history-label');
   if (labelEl) labelEl.textContent = thisWeekCount > 0
-    ? 'Completed this week (' + thisWeekCount + ')'
+    ? `Completed this week (${thisWeekCount})`
     : 'Completed this week';
 
   if (!weeks.length) {
-    container.innerHTML = '<div class="done-history-empty">Nothing completed yet. Finish tasks and they'll appear here by week.</div>';
+    container.innerHTML = '<div class="done-history-empty">Nothing completed yet. Finish tasks and they\'ll appear here by week.</div>';
     return;
   }
 
@@ -1178,21 +1160,39 @@ function renderDoneHistory() {
       const dObj = new Date(item.date + 'T00:00:00');
       const dayLabel = days[dObj.getDay()] + ' ' + months[dObj.getMonth()] + ' ' + dObj.getDate();
       const proj = item.projectId ? getProjectName(item.projectId) : '';
-      return '<div class="done-history-row">'
-        + '<span class="dh-day">' + dayLabel + '</span>'
-        + '<span style="flex:1;">' + escHtml(item.title) + '</span>'
-        + (proj ? '<span class="dh-proj">' + escHtml(proj) + '</span>' : '')
-        + '</div>';
+      return `<div class="done-history-row">
+        <span class="dh-day">${dayLabel}</span>
+        <span style="flex:1;">${escHtml(item.title)}</span>
+        ${proj ? `<span class="dh-proj">${escHtml(proj)}</span>` : ''}
+      </div>`;
     }).join('');
-    return '<div class="done-week-block">'
-      + '<div class="done-week-label">' + label + ' · ' + items.length + ' completed</div>'
-      + rows
-      + '</div>';
+    return `<div class="done-week-block">
+      <div class="done-week-label">
+        <span>${label} · ${items.length} completed</span>
+        <button class="done-week-clear" onclick="clearWeekHistory('${weekKey}')" title="Clear this week">Clear</button>
+      </div>
+      ${rows}
+    </div>`;
   }).join('');
 }
 
-function showLoading(show) {
-  document.getElementById('loading-screen').style.display = show ? 'flex' : 'none';
+// ============================================================
+// BOOT ERROR HANDLING
+// ============================================================
+function showBootError(msg) {
+  document.querySelector('.loading-dots').style.display = 'none';
+  const errEl = document.getElementById('loading-error');
+  const retryEl = document.getElementById('loading-retry');
+  errEl.textContent = msg;
+  errEl.style.display = 'block';
+  retryEl.style.display = 'block';
+}
+
+function retryBoot() {
+  document.querySelector('.loading-dots').style.display = 'flex';
+  document.getElementById('loading-error').style.display = 'none';
+  document.getElementById('loading-retry').style.display = 'none';
+  bootApp();
 }
 
 // ============================================================
@@ -1215,20 +1215,20 @@ async function doLogin() {
   const pass = document.getElementById('login-pass').value;
   const btn = document.getElementById('login-btn');
   const err = document.getElementById('login-error');
-
   if (!email || !pass) { err.textContent = 'Please enter email and password.'; err.style.display = 'block'; return; }
-
   btn.textContent = 'Entering...'; btn.disabled = true;
   err.style.display = 'none';
-
-  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
-
-  btn.textContent = 'Enter'; btn.disabled = false;
-
-  if (error) { err.textContent = error.message; err.style.display = 'block'; return; }
-
-  currentUser = data.user;
-  await startApp();
+  try {
+    const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+    if (error) { err.textContent = error.message; err.style.display = 'block'; return; }
+    currentUser = data.user;
+    await startApp();
+  } catch(e) {
+    err.textContent = 'Connection error. Check your internet and try again.';
+    err.style.display = 'block';
+  } finally {
+    btn.textContent = 'Enter'; btn.disabled = false;
+  }
 }
 
 async function doRegister() {
@@ -1237,32 +1237,30 @@ async function doRegister() {
   const pass2 = document.getElementById('reg-pass2').value;
   const btn = document.getElementById('register-btn');
   const err = document.getElementById('reg-error');
-
   if (!email) { err.textContent = 'Please enter an email.'; err.style.display = 'block'; return; }
   if (pass.length < 6) { err.textContent = 'Password must be at least 6 characters.'; err.style.display = 'block'; return; }
   if (pass !== pass2) { err.textContent = 'Passwords do not match.'; err.style.display = 'block'; return; }
-
   btn.textContent = 'Creating...'; btn.disabled = true;
   err.style.display = 'none';
-
-  const { data, error } = await sb.auth.signUp({ email, password: pass });
-
-  btn.textContent = 'Create Account'; btn.disabled = false;
-
-  if (error) { err.textContent = error.message; err.style.display = 'block'; return; }
-
-  // Auto sign in after registration
-  const { data: signInData, error: signInError } = await sb.auth.signInWithPassword({ email, password: pass });
-  if (signInError) { err.textContent = 'Account created! Please sign in.'; err.style.display = 'block'; showLogin(); return; }
-
-  currentUser = signInData.user;
-  await startApp();
+  try {
+    const { data, error } = await sb.auth.signUp({ email, password: pass });
+    if (error) { err.textContent = error.message; err.style.display = 'block'; return; }
+    const { data: signInData, error: signInError } = await sb.auth.signInWithPassword({ email, password: pass });
+    if (signInError) { err.textContent = 'Account created! Please sign in.'; err.style.display = 'block'; showLogin(); return; }
+    currentUser = signInData.user;
+    await startApp();
+  } catch(e) {
+    err.textContent = 'Connection error. Check your internet and try again.';
+    err.style.display = 'block';
+  } finally {
+    btn.textContent = 'Create Account'; btn.disabled = false;
+  }
 }
 
 async function doLogout() {
-  await sb.auth.signOut();
+  try { await sb.auth.signOut(); } catch(e) {}
   currentUser = null;
-  state = { dailyTasks: [], masterTasks: [], projects: [], winDays: [], lastChecked: null };
+  state = { dailyTasks: [], masterTasks: [], projects: [], winDays: [], lastChecked: null, notes: {} };
   document.getElementById('app').style.display = 'none';
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('login-email').value = '';
@@ -1274,7 +1272,6 @@ async function doLogout() {
 // ============================================================
 async function loadAllData() {
   const uid_val = currentUser.id;
-
   const [dailyRes, masterRes, projRes, projTaskRes, winRes] = await Promise.all([
     sb.from('daily_tasks').select('*').eq('user_id', uid_val).order('time'),
     sb.from('master_tasks').select('*').eq('user_id', uid_val).order('created_at'),
@@ -1283,7 +1280,6 @@ async function loadAllData() {
     sb.from('win_days').select('date').eq('user_id', uid_val)
   ]);
 
-  // Map snake_case DB columns to camelCase for the UI
   state.dailyTasks = (dailyRes.data || []).map(r => ({
     id: r.id, title: r.title, time: r.time,
     projectId: r.project_id, done: r.done, date: r.date
@@ -1294,7 +1290,6 @@ async function loadAllData() {
     isTenMin: r.is_ten_min, createdAt: r.created_at
   }));
 
-  // Attach project_tasks to their projects
   const ptasks = (projTaskRes.data || []);
   state.projects = (projRes.data || []).map(p => ({
     id: p.id, name: p.name, desc: p.description,
@@ -1305,14 +1300,12 @@ async function loadAllData() {
   }));
 
   state.winDays = (winRes.data || []).map(r => r.date);
-
-  // Load last-checked from localStorage (it's UI state, not user data)
   state.lastChecked = localStorage.getItem(`tl_lastchecked_${currentUser.id}`);
-  loadJournal();
+  loadNotes();
 }
 
 // ============================================================
-// DATA WRITE HELPERS (Supabase)
+// DB WRITE HELPERS
 // ============================================================
 async function dbAddDailyTask(task) {
   const { data, error } = await sb.from('daily_tasks').insert({
@@ -1392,18 +1385,20 @@ async function dbAddWinDay(date) {
 }
 
 async function dbAddReflection(r) {
-  await sb.from('reflections').insert({ user_id: currentUser.id, date: r.date, q1: r.q1, q2: r.q2 });
+  try { await sb.from('reflections').insert({ user_id: currentUser.id, date: r.date, q1: r.q1, q2: r.q2 }); } catch(e) {}
 }
 
 // ============================================================
-// RECURRING TASKS (stored in localStorage, no extra DB table needed)
+// RECURRING TASKS
 // ============================================================
 function getRecurringTasks() {
   try { return JSON.parse(localStorage.getItem(`tl_recurring_${currentUser.id}`) || '[]'); } catch(e) { return []; }
 }
+
 function saveRecurringTasks(tasks) {
   localStorage.setItem(`tl_recurring_${currentUser.id}`, JSON.stringify(tasks));
 }
+
 async function dbSaveRecurring({ title, time, projectId, pattern }) {
   const tasks = getRecurringTasks();
   const id = uid();
@@ -1411,15 +1406,14 @@ async function dbSaveRecurring({ title, time, projectId, pattern }) {
   saveRecurringTasks(tasks);
 }
 
-// Check if a recurring task should fire today
 function recurMatchesToday(pattern) {
   const d = new Date();
-  const dow = d.getDay(); // 0=Sun,1=Mon,...,6=Sat
+  const dow = d.getDay();
   const dayMap = { mon:1, tue:2, wed:3, thu:4, fri:5, sat:6, sun:0 };
   if (pattern === 'daily') return true;
   if (pattern === 'weekdays') return dow >= 1 && dow <= 5;
   if (pattern === 'weekends') return dow === 0 || dow === 6;
-  if (pattern === 'weekly') return true; // simplification: fires every week; track via last-fired
+  if (pattern === 'weekly') return true;
   if (dayMap[pattern] !== undefined) return dow === dayMap[pattern];
   return false;
 }
@@ -1428,17 +1422,13 @@ async function syncRecurringTasksToday() {
   const recurTasks = getRecurringTasks();
   const lastFiredKey = `tl_recur_fired_${currentUser.id}_${today()}`;
   const alreadyFired = new Set(JSON.parse(localStorage.getItem(lastFiredKey) || '[]'));
-
   for (const r of recurTasks) {
     if (alreadyFired.has(r.id)) continue;
     if (!recurMatchesToday(r.pattern)) continue;
-    // Check not already in daily_tasks today
     const exists = state.dailyTasks.some(t => t.date === today() && t.title === r.title && t.projectId === r.projectId);
     if (!exists) {
       const newId = await dbAddDailyTask({ title: r.title, time: r.time, projectId: r.projectId, date: today() });
-      if (newId) {
-        state.dailyTasks.push({ id: newId, title: r.title, time: r.time, projectId: r.projectId, done: false, date: today() });
-      }
+      if (newId) state.dailyTasks.push({ id: newId, title: r.title, time: r.time, projectId: r.projectId, done: false, date: today() });
     }
     alreadyFired.add(r.id);
   }
@@ -1450,29 +1440,25 @@ async function syncRecurringTasksToday() {
 // ============================================================
 async function checkRollover() {
   const td = today();
-  const lastChecked = state.lastChecked;
-
-  // Collect every past date present in dailyTasks (handles missed days / cross-browser)
   const pastDates = [...new Set(state.dailyTasks.filter(t => t.date < td).map(t => t.date))].sort();
 
   for (const pastDate of pastDates) {
-    const pastAll   = state.dailyTasks.filter(t => t.date === pastDate);
-    const pastDone  = pastAll.filter(t => t.done);
+    const pastAll = state.dailyTasks.filter(t => t.date === pastDate);
+    const pastDone = pastAll.filter(t => t.done);
     const pastUndone = pastAll.filter(t => !t.done);
 
-    // Win day?
     if (pastAll.length > 0 && pastUndone.length === 0 && !state.winDays.includes(pastDate)) {
       state.winDays.push(pastDate);
       await dbAddWinDay(pastDate);
     }
 
-    // Record done tasks to weekly history (localStorage — no await needed)
+    // Record done tasks to history BEFORE deleting them
     recordDoneTasksToHistory(pastDone, pastDate);
 
-    // Delete done past tasks from DB + state
+    // Delete done past tasks
     for (const t of pastDone) { await dbDeleteDailyTask(t.id); }
 
-    // Move unfinished to master list then delete
+    // Move unfinished to master list, then delete
     for (const t of pastUndone) {
       const alreadyThere = state.masterTasks.some(m => m.title === t.title);
       if (!alreadyThere) {
@@ -1482,16 +1468,15 @@ async function checkRollover() {
       await dbDeleteDailyTask(t.id);
     }
 
-    // Show reflection for lastChecked date only
-    if (pastDate === lastChecked && pastUndone.length > 0) {
+    if (pastDate === state.lastChecked && pastUndone.length > 0) {
       setTimeout(() => showReflection(pastUndone), 800);
     }
   }
 
-  // Strip all past tasks from state
+  // Strip all past tasks from state (done tasks gone, undone moved to master)
   state.dailyTasks = state.dailyTasks.filter(t => t.date >= td);
 
-  // Remove done + past-dated project_tasks (keep project list clean)
+  // Clean up done+past project tasks so they don't clutter projects
   for (const proj of state.projects) {
     const toRemove = (proj.tasks || []).filter(t => t.done && t.scheduledDate && t.scheduledDate < td);
     for (const t of toRemove) { await dbDeleteProjectTask(t.id); }
@@ -1503,7 +1488,6 @@ async function checkRollover() {
   dashOverflowUnlocked = false;
 }
 
-// Returns all tasks scheduled for today (from projects) not yet in daily_tasks
 function getPendingTodayTasks() {
   const pending = [];
   for (const proj of state.projects) {
@@ -1519,8 +1503,6 @@ function getPendingTodayTasks() {
 }
 
 async function syncProjectTasksToday() {
-  // Push ALL today-scheduled project tasks to daily_tasks (no cap).
-  // The dashboard display layer controls what's visible (7 active max).
   const pending = getPendingTodayTasks();
   for (const { task, proj } of pending) {
     const newId = await dbAddDailyTask({
@@ -1533,10 +1515,6 @@ async function syncProjectTasksToday() {
   }
 }
 
-// fillFromQueue is now a no-op — all tasks are synced at boot.
-// Kept for compatibility; visual queue is managed in renderDashboard.
-async function fillFromQueue() { /* tasks already in daily_tasks via syncProjectTasksToday */ }
-
 // ============================================================
 // RENDER
 // ============================================================
@@ -1545,23 +1523,21 @@ function render() {
   renderMaster();
   renderProjects();
   renderProjectDropdowns();
-  renderJournal();
+  renderNotes();
 }
 
-// Track if user has unlocked the "see more" extra tasks
 let dashOverflowUnlocked = false;
 
 function renderDashboard() {
   const MAX = 7;
   const td = todayTasks();
+  // Active = not done, shown in main list
   const activeTasks = td.filter(t => !t.done);
   const doneTasks = td.filter(t => t.done);
-  const hiddenActive = activeTasks.slice(7); // tasks queued beyond the 7 shown
   const doneCount = doneTasks.length;
   const activeCount = activeTasks.length;
   const total = td.length;
 
-  // Header
   document.getElementById('day-title').textContent = getDayLabel();
   document.getElementById('day-progress').textContent =
     total === 0 ? 'No tasks scheduled yet' :
@@ -1571,7 +1547,6 @@ function renderDashboard() {
   const pct = total === 0 ? 0 : Math.round((doneCount / total) * 100);
   document.getElementById('progress-fill').style.width = pct + '%';
 
-  // Win day check
   if (total > 0 && activeCount === 0 && !state.winDays.includes(today())) {
     state.winDays.push(today());
     dbAddWinDay(today());
@@ -1582,7 +1557,6 @@ function renderDashboard() {
   container.innerHTML = '';
 
   if (total === 0) {
-    // Empty state: show time slots from current hour
     const nowH = new Date().getHours();
     const startH = nowH < 23 ? nowH + 1 : 0;
     for (let i = 0; i < MAX; i++) {
@@ -1594,10 +1568,8 @@ function renderDashboard() {
       container.appendChild(el);
     }
   } else {
-    // Show up to MAX active tasks
+    // Show up to MAX active tasks (NOT done ones — they go in the collapsed section below)
     const visibleActive = activeTasks.slice(0, MAX);
-
-    // Time conflict detection
     const timeCounts = {};
     visibleActive.forEach(t => { const k = t.time || ''; timeCounts[k] = (timeCounts[k]||0)+1; });
 
@@ -1657,7 +1629,8 @@ function renderDashboard() {
       container.appendChild(el);
     }
 
-    // Overflow: after 3 done, reveal hidden queue
+    // Overflow queue reveal (after 3 done)
+    const hiddenActive = activeTasks.slice(MAX);
     const queueCount = getPendingTodayTasks().length;
     const hiddenTotal = hiddenActive.length + queueCount;
     if (doneCount >= 3 && hiddenTotal > 0) {
@@ -1693,18 +1666,18 @@ function renderDashboard() {
     }
   }
 
-  // Done section — collapsible, below active
+  // Done section — collapsible, HIDDEN by default, below active tasks
   if (doneTasks.length > 0) {
     const doneSection = document.createElement('div');
     doneSection.className = 'done-section';
     doneSection.innerHTML = `
-      <button class="done-section-toggle" onclick="
-        const list = this.nextElementSibling;
+      <button class="done-section-toggle" id="done-toggle-btn" onclick="
+        const list = document.getElementById('done-list-inner');
         const open = list.style.display !== 'none';
         list.style.display = open ? 'none' : '';
         this.textContent = open ? '▸ Completed today (${doneTasks.length})' : '▾ Completed today (${doneTasks.length})';
-      ">▾ Completed today (${doneTasks.length})</button>
-      <div>
+      ">▸ Completed today (${doneTasks.length})</button>
+      <div id="done-list-inner" style="display:none;">
         ${doneTasks.map(t => `
           <div class="done-task-row">
             <div class="task-check done" onclick="toggleTask('${t.id}')" title="Mark undone"></div>
@@ -1733,7 +1706,7 @@ function renderDashboard() {
   }
   container.appendChild(tenBlock);
 
-  // Add-task section: gate on active count only
+  // Add-task section gate
   const note = document.getElementById('task-limit-note');
   const pendingCount = getPendingTodayTasks().length + activeTasks.slice(MAX).length;
   if (activeCount >= MAX) {
@@ -1767,7 +1740,7 @@ function renderMaster() {
     const el = document.createElement('div');
     el.className = 'master-item';
     const pname = getProjectName(task.projectId);
-    const canSchedule = todayTasks().length < 7;
+    const canSchedule = todayTasks().filter(t => !t.done).length < 7;
     el.innerHTML = `
       <div class="master-item-bullet">—</div>
       <div class="master-item-content">
@@ -1795,10 +1768,13 @@ function renderProjects() {
 
   state.projects.forEach(proj => {
     const tasks = proj.tasks || [];
+    // Only show NOT done tasks in project view (done tasks are gone after rollover; today's done hidden too)
+    const activeTasks = tasks.filter(t => !t.done);
     const done = tasks.filter(t => t.done).length;
-    const pct = tasks.length === 0 ? 0 : Math.round((done / tasks.length) * 100);
-    const scheduled = [...tasks.filter(t => t.scheduledDate)].sort((a,b) => a.scheduledDate > b.scheduledDate ? 1 : -1);
-    const backlog = tasks.filter(t => !t.scheduledDate);
+    const total = tasks.length;
+    const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+    const scheduled = [...activeTasks.filter(t => t.scheduledDate)].sort((a,b) => a.scheduledDate > b.scheduledDate ? 1 : -1);
+    const backlog = activeTasks.filter(t => !t.scheduledDate);
 
     let tasksHtml = '';
     if (scheduled.length > 0) {
@@ -1809,8 +1785,8 @@ function renderProjects() {
         const dateLabel = isToday ? 'today' : formatDateLabel(t.scheduledDate);
         return `
           <div class="project-task-item">
-            <div class="task-check ${t.done ? 'done' : ''}" onclick="toggleProjectTask('${proj.id}','${t.id}')"></div>
-            <div class="project-task-text ${t.done ? 'done' : ''}">
+            <div class="task-check" onclick="toggleProjectTask('${proj.id}','${t.id}')"></div>
+            <div class="project-task-text">
               ${escHtml(t.title)}
               ${t.scheduledTime ? `<span style="color:var(--ink-faint);font-size:0.75rem;margin-left:0.4rem;">${formatTime(t.scheduledTime)}</span>` : ''}
               ${t.recurPattern ? `<span class="recurring-badge">↻ ${t.recurPattern}</span>` : ''}
@@ -1827,15 +1803,17 @@ function renderProjects() {
       tasksHtml += `<div style="font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-faint);padding:0.6rem 0 0.3rem;${scheduled.length > 0 ? 'margin-top:0.5rem;' : ''}">Backlog</div>`;
       tasksHtml += backlog.map(t => `
         <div class="project-task-item">
-          <div class="task-check ${t.done ? 'done' : ''}" onclick="toggleProjectTask('${proj.id}','${t.id}')"></div>
-          <div class="project-task-text ${t.done ? 'done' : ''}">${escHtml(t.title)}</div>
+          <div class="task-check" onclick="toggleProjectTask('${proj.id}','${t.id}')"></div>
+          <div class="project-task-text">${escHtml(t.title)}</div>
           <div class="project-actions">
             <button class="master-btn" onclick="editProjectTaskSchedule('${proj.id}','${t.id}')">schedule</button>
             <button class="master-btn danger" onclick="deleteProjectTask('${proj.id}','${t.id}')">✕</button>
           </div>
         </div>`).join('');
     }
-    if (tasks.length === 0) tasksHtml = `<div style="color:var(--ink-faint);font-size:0.8rem;padding:0.8rem 0;">No tasks yet. Push tasks from Master List or add directly.</div>`;
+    if (activeTasks.length === 0) {
+      tasksHtml = `<div style="color:var(--ink-faint);font-size:0.8rem;padding:0.8rem 0;">No active tasks. Push tasks from Master List or add directly.</div>`;
+    }
 
     const card = document.createElement('div');
     card.className = 'project-card';
@@ -1853,7 +1831,7 @@ function renderProjects() {
         <div style="text-align:right;display:flex;align-items:center;gap:0.8rem;">
           <button class="task-btn" onclick="event.stopPropagation();openRenameProject('${proj.id}')" title="Rename" style="font-size:0.65rem;letter-spacing:0.08em;color:var(--ink-faint);">rename</button>
           <div>
-            <div class="project-progress-text">${done}/${tasks.length} done</div>
+            <div class="project-progress-text">${done}/${total} done</div>
             <div style="font-size:0.65rem;color:var(--ink-faint);margin-top:0.1rem;">${scheduled.length} scheduled · ${backlog.length} backlog</div>
           </div>
         </div>
@@ -1867,7 +1845,6 @@ function renderProjects() {
         </div>
       </div>`;
 
-    // Drag-to-reorder project cards
     card.addEventListener('dragstart', e => {
       e.dataTransfer.setData('proj-drag', proj.id);
       e.dataTransfer.effectAllowed = 'move';
@@ -1876,7 +1853,6 @@ function renderProjects() {
     card.addEventListener('dragend', () => card.classList.remove('proj-dragging'));
     card.addEventListener('dragover', e => {
       e.preventDefault();
-      // Only respond to project drags, not task drags
       card.classList.add('proj-drag-over');
     });
     card.addEventListener('dragleave', () => card.classList.remove('proj-drag-over'));
@@ -1899,7 +1875,6 @@ function renderProjects() {
 }
 
 function saveProjectOrder() {
-  // Persist order to localStorage (lightweight, no extra DB column needed)
   const order = state.projects.map(p => p.id);
   localStorage.setItem(`tl_proj_order_${currentUser.id}`, JSON.stringify(order));
 }
@@ -1923,10 +1898,8 @@ function applyProjectOrder() {
 function renderProjectDropdowns() {
   const opts = `<option value="">No project</option>` +
     state.projects.map(p => `<option value="${p.id}">${escHtml(p.name)}</option>`).join('');
-  // Only daily-task project dropdown (master-project removed — use push-to-project instead)
   const dpEl = document.getElementById('daily-task-project');
   if (dpEl) dpEl.innerHTML = opts;
-  // Push modal project select
   const pushEl = document.getElementById('push-project-select');
   if (pushEl) pushEl.innerHTML = state.projects.map(p => `<option value="${p.id}">${escHtml(p.name)}</option>`).join('');
 }
@@ -1940,14 +1913,12 @@ async function toggleTask(id) {
   task.done = !task.done;
   await dbToggleDailyTask(id, task.done);
 
-  // Mirror done state to the matching project_task row
+  // Mirror to project task
   if (task.projectId) {
     const proj = state.projects.find(p => p.id === task.projectId);
     if (proj) {
-      // Match: same title, same project, scheduled today or unscheduled, not yet synced
       const projTask = proj.tasks.find(t =>
-        t.title === task.title &&
-        (t.scheduledDate === today() || !t.scheduledDate)
+        t.title === task.title && (t.scheduledDate === today() || !t.scheduledDate)
       );
       if (projTask && projTask.done !== task.done) {
         projTask.done = task.done;
@@ -1961,12 +1932,10 @@ async function toggleTask(id) {
 }
 
 function celebrateTask(taskId) {
-  // Find the check element
   const el = document.querySelector(`[data-task-id="${taskId}"] .task-check`);
   if (el) {
     el.classList.add('celebrate-ring');
     el.addEventListener('animationend', () => el.classList.remove('celebrate-ring'), { once: true });
-    // Confetti burst from element position
     const rect = el.getBoundingClientRect();
     const colors = ['#7c6fa0','#a896cc','#1a1625','#c5bcdf','#5c5470','#f0edf8','#d4c9e8'];
     for (let i = 0; i < 18; i++) {
@@ -1991,7 +1960,6 @@ function celebrateTask(taskId) {
 async function deleteDaily(id) {
   state.dailyTasks = state.dailyTasks.filter(t => t.id !== id);
   await dbDeleteDailyTask(id);
-  await fillFromQueue();
   renderDashboard();
 }
 
@@ -2005,23 +1973,17 @@ async function addDailyTask() {
 
   const btn = document.getElementById('add-daily-btn');
   btn.disabled = true;
-
   const newId = await dbAddDailyTask({ title, time, projectId, date: today() });
   if (newId) {
     state.dailyTasks.push({ id: newId, title, time, projectId, done: false, date: today() });
     document.getElementById('daily-task-input').value = '';
-
-    // If linked to a project, also create a project_task row (scheduled for today)
     if (projectId) {
       const proj = state.projects.find(p => p.id === projectId);
       if (proj) {
-        // Check not already in project tasks (avoid duplicate if came from confirmProjectTask)
         const alreadyInProj = proj.tasks.some(t => t.title === title && t.scheduledDate === today());
         if (!alreadyInProj) {
           const ptId = await dbAddProjectTask({ title, scheduledDate: today(), scheduledTime: time }, projectId);
-          if (ptId) {
-            proj.tasks.push({ id: ptId, title, done: false, scheduledDate: today(), scheduledTime: time });
-          }
+          if (ptId) proj.tasks.push({ id: ptId, title, done: false, scheduledDate: today(), scheduledTime: time });
         }
       }
     }
@@ -2033,13 +1995,12 @@ async function addDailyTask() {
 async function addMasterTask() {
   const title = document.getElementById('master-input').value.trim();
   if (!title) { document.getElementById('master-input').focus(); return; }
-
   const newId = await dbAddMasterTask({ title, projectId: null });
   if (newId) {
     state.masterTasks.push({ id: newId, title, projectId: null, isTenMin: false });
     document.getElementById('master-input').value = '';
     renderMaster();
-    renderJournal(); // refresh task tag dropdown
+    renderNotes();
   }
 }
 
@@ -2065,7 +2026,7 @@ async function completeTenMin(id) {
   toast('Done ✓');
 }
 
-// Schedule modal (Master List → Today)
+// Schedule modal
 let scheduleTarget = null;
 let scheduleSource = null;
 
@@ -2085,7 +2046,6 @@ function closeSchedule() {
 async function confirmSchedule() {
   const time = document.getElementById('schedule-time').value;
   if (!scheduleTarget) return;
-
   const task = state.masterTasks.find(t => t.id === scheduleTarget);
   if (task) {
     const newId = await dbAddDailyTask({ title: task.title, time, projectId: task.projectId, date: today() });
@@ -2115,7 +2075,6 @@ async function addProject() {
   const name = document.getElementById('project-name-input').value.trim();
   const desc = document.getElementById('project-desc-input').value.trim();
   if (!name) { document.getElementById('project-name-input').focus(); return; }
-
   const newId = await dbAddProject({ name, desc });
   if (newId) {
     state.projects.push({ id: newId, name, desc, tasks: [] });
@@ -2169,7 +2128,6 @@ async function toggleProjectTask(projId, taskId) {
   task.done = !task.done;
   await dbUpdateProjectTask(taskId, { done: task.done });
   if (task.done) {
-    // mini celebrate on project task
     const el = document.querySelector(`[onclick="toggleProjectTask('${projId}','${taskId}')"]`);
     if (el) {
       el.classList.add('celebrate-ring');
@@ -2231,7 +2189,6 @@ async function confirmProjectTask() {
   if (!title || !currentProjectId) return;
   const proj = state.projects.find(p => p.id === currentProjectId);
   if (!proj) return;
-
   const scheduledDate = document.getElementById('proj-task-date').value || null;
   const scheduledTime = document.getElementById('proj-task-time').value || null;
   const recurPattern = document.getElementById('proj-task-recur').value || null;
@@ -2266,7 +2223,7 @@ async function confirmProjectTask() {
   render(); closeModal('project-task-modal');
 }
 
-// Push Master Task → Project
+// Push Master → Project
 let pushTargetId = null;
 
 function openPushToProject(taskId) {
@@ -2295,32 +2252,21 @@ async function confirmPushToProject() {
   if (!pushTargetId) return;
   const projId = document.getElementById('push-project-select').value;
   if (!projId) { toast('Pick a project first.'); return; }
-
   const masterTask = state.masterTasks.find(t => t.id === pushTargetId);
   if (!masterTask) return;
-
   const proj = state.projects.find(p => p.id === projId);
   if (!proj) return;
-
   const scheduledDate = document.getElementById('push-task-date').value || null;
   const scheduledTime = document.getElementById('push-task-time').value || null;
 
-  // Add to project_tasks in DB
-  const newProjTaskId = await dbAddProjectTask(
-    { title: masterTask.title, scheduledDate, scheduledTime },
-    projId
-  );
+  const newProjTaskId = await dbAddProjectTask({ title: masterTask.title, scheduledDate, scheduledTime }, projId);
   if (newProjTaskId) {
     proj.tasks.push({ id: newProjTaskId, title: masterTask.title, done: false, scheduledDate, scheduledTime });
   }
 
-  // If scheduled for today, also push to dashboard
   if (scheduledDate === today()) {
     if (todayTasks().length < 7) {
-      const newDailyId = await dbAddDailyTask({
-        title: masterTask.title, time: scheduledTime || '09:00',
-        projectId: projId, date: today()
-      });
+      const newDailyId = await dbAddDailyTask({ title: masterTask.title, time: scheduledTime || '09:00', projectId: projId, date: today() });
       if (newDailyId) {
         state.dailyTasks.push({ id: newDailyId, title: masterTask.title, time: scheduledTime || '09:00', projectId: projId, done: false, date: today() });
         toast(`Pushed to ${proj.name} + added to today's Dashboard.`);
@@ -2332,11 +2278,9 @@ async function confirmPushToProject() {
     toast(`Pushed to ${proj.name}.`);
   }
 
-  // Remove from master list
   state.masterTasks = state.masterTasks.filter(t => t.id !== pushTargetId);
   await dbDeleteMasterTask(pushTargetId);
   pushTargetId = null;
-
   closeModal('push-project-modal');
   render();
 }
@@ -2379,13 +2323,11 @@ function renderCalendar() {
     el.className = 'cal-day header'; el.textContent = d;
     grid.appendChild(el);
   });
-
   const now = new Date();
   const year = now.getFullYear(), month = now.getMonth();
   const startDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const td = today();
-
   for (let i = 0; i < startDay; i++) {
     const el = document.createElement('div'); el.className = 'cal-day'; grid.appendChild(el);
   }
@@ -2398,7 +2340,6 @@ function renderCalendar() {
     el.textContent = d;
     grid.appendChild(el);
   }
-
   let streak = 0;
   const check = new Date(now);
   while (true) {
@@ -2418,31 +2359,67 @@ function switchTab(tab, btn) {
 }
 
 // ============================================================
-// BOOT
+// BOOT — with timeout fallback and error handling
 // ============================================================
-async function startApp() {
-  showLoading(true);
-  document.getElementById('login-screen').style.display = 'none';
+const BOOT_TIMEOUT_MS = 10000; // 10 seconds
 
-  await loadAllData();
-  applyProjectOrder();
-  await checkRollover();
-  await syncRecurringTasksToday();
-  await syncProjectTasksToday();
+async function bootApp() {
+  // Set a timeout so loading never hangs forever
+  const timeoutId = setTimeout(() => {
+    showBootError('Loading timed out. Check your internet connection.');
+  }, BOOT_TIMEOUT_MS);
 
-  showLoading(false);
-  document.getElementById('app').style.display = 'flex';
-  document.getElementById('app').style.flexDirection = 'column';
+  try {
+    const { data: { session }, error } = await sb.auth.getSession();
+    clearTimeout(timeoutId);
 
-  const now = new Date();
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  document.getElementById('header-date').textContent = `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+    if (error) {
+      showBootError('Could not connect. Check your internet and try again.');
+      return;
+    }
 
-  render();
+    if (session) {
+      currentUser = session.user;
+      await startApp();
+    } else {
+      // No session — show login
+      document.getElementById('loading-screen').style.display = 'none';
+      document.getElementById('login-screen').style.display = 'flex';
+    }
+  } catch(e) {
+    clearTimeout(timeoutId);
+    showBootError('Connection error. Please check your internet and retry.');
+  }
 }
 
-// Key events
+async function startApp() {
+  try {
+    await loadAllData();
+    applyProjectOrder();
+    await checkRollover();
+    await syncRecurringTasksToday();
+    await syncProjectTasksToday();
+
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    document.getElementById('app').style.flexDirection = 'column';
+
+    const now = new Date();
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    document.getElementById('header-date').textContent = `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+
+    render();
+  } catch(e) {
+    console.error('startApp error:', e);
+    showBootError('Failed to load your data. Please refresh or retry.');
+  }
+}
+
+// ============================================================
+// INIT
+// ============================================================
 document.addEventListener('DOMContentLoaded', () => {
+  // Key bindings
   document.getElementById('daily-task-input').addEventListener('keydown', e => { if (e.key === 'Enter') addDailyTask(); });
   document.getElementById('master-input').addEventListener('keydown', e => { if (e.key === 'Enter') addMasterTask(); });
   document.getElementById('login-pass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
@@ -2452,29 +2429,24 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('proj-task-time').addEventListener('change', updateProjTaskHint);
   document.getElementById('push-task-date').addEventListener('change', updatePushTaskHint);
   document.getElementById('push-task-time').addEventListener('change', updatePushTaskHint);
-  document.getElementById('journal-note-input').addEventListener('keydown', e => { if (e.key === 'Enter') addJournalNote(); });
+  document.getElementById('notes-note-input').addEventListener('keydown', e => { if (e.key === 'Enter') addNote(); });
 
+  // Click-outside to close modals
   ['reflection-modal','schedule-modal','cal-modal','project-task-modal','rename-project-modal','push-project-modal'].forEach(id => {
     document.getElementById(id).addEventListener('click', function(e) {
       if (e.target === this) closeModal(id);
     });
   });
 
-  // Check for existing Supabase session
-  sb.auth.getSession().then(({ data: { session } }) => {
-    if (session) {
-      currentUser = session.user;
-      startApp();
-    } else {
-      showLoading(false);
-      document.getElementById('login-screen').style.display = 'flex';
+  // Auth state changes
+  sb.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_OUT') {
+      doLogout();
     }
   });
 
-  // Listen for auth changes (e.g. token refresh)
-  sb.auth.onAuthStateChange((event, session) => {
-    if (event === 'SIGNED_OUT') doLogout();
-  });
+  // Boot
+  bootApp();
 });
 
 if ('serviceWorker' in navigator) {
